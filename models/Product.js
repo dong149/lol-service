@@ -7,3 +7,8 @@ const productSchema = new Schema({
 });
 
 mongoose.model("products", productSchema);
+
+const test = new products({
+  name: "test",
+  description: "testtest",
+});
