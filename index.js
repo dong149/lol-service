@@ -1,7 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
-const cors = require("cors");
+// const cors = require("cors");
 // IMPORT MODELS
 require("./models/Product");
 
@@ -18,11 +18,11 @@ mongoose.connect(
   }
 );
 
-corsOptions = {
-  origin: "https://league-of-legend-service.herokuapp.com",
-  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
-};
-app.use(cors(corsOptions));
+// corsOptions = {
+//   origin: "https://league-of-legend-service.herokuapp.com",
+//   optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+// };
+// app.use(cors(corsOptions));
 
 app.use(bodyParser.json());
 
