@@ -54,6 +54,14 @@ body {
 
   margin: 0 auto;
   margin-top: 30px;
+  .summoner-tier-wrap {
+    display: inline-block;
+    width: 70px;
+
+    .summoner-tier {
+      width: 100%;
+    }
+  }
   .summoner-name-wrap {
     height: 100px;
     .summoner-name {

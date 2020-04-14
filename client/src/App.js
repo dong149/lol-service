@@ -11,6 +11,7 @@ const App = () => {
   const [summoner, setSummoner] = useState();
   const [summonerData, setSummonerData] = useState();
   const [summonerRank, setSummonerRank] = useState();
+  const [summonerTierSrc, setSummonerTierSrc] = useState();
   const handleInput = (text) => {
     setSummoner(text);
   };
@@ -18,8 +19,11 @@ const App = () => {
     try {
       const infoTemp = await api.getSummonerByName(summoner);
       const rankTemp = await api.getLeagueByEncryptedId(infoTemp.id);
+      const tierTemp = `/ranked-emblems/Emblem_${rankTemp[0].tier}.png`;
       setSummonerData(infoTemp);
       setSummonerRank(rankTemp);
+      setSummonerTierSrc(tierTemp);
+
       console.log(infoTemp);
       console.log(rankTemp);
     } catch (err) {
@@ -47,6 +51,9 @@ const App = () => {
 
       {summonerData ? (
         <div className="summoner-info">
+          <div className="summoner-tier-wrap">
+            <img className="summoner-tier" src={summonerTierSrc} alt="rank" />
+          </div>
           <div className="summoner-name-wrap">
             <span className="summoner-name">{summonerData.name}</span>
             <span className="summoner-name">
