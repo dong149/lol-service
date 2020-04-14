@@ -99,6 +99,7 @@ const getLeagueByEncryptedId = async (res, encryptedId) => {
 };
 
 const PORT = process.env.PORT || 5000;
+console.log(PORT);
 app.listen(PORT, () => {
   console.log(`app running on port ${PORT}`);
 });
