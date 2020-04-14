@@ -4,14 +4,59 @@ import React, { useState, useEffect } from "react";
 
 // SERVICES
 import productService from "./services/productService";
+import { api } from "./api/summoner.js";
 import "./styles/home.scss";
 
-function App() {
+const App = () => {
+  const [summoner, setSummoner] = useState();
+  const [summonerData, setSummonerData] = useState();
+  const [summonerRank, setSummonerRank] = useState();
+  const handleInput = (text) => {
+    setSummoner(text);
+  };
+  const onSubmit = async () => {
+    try {
+      const infoTemp = await api.getSummonerByName(summoner);
+      const rankTemp = await api.getLeagueByEncryptedId(infoTemp.id);
+      setSummonerData(infoTemp);
+      setSummonerRank(rankTemp);
+      console.log(infoTemp);
+      console.log(rankTemp);
+    } catch (err) {
+      console.error(err);
+    }
+  };
   return (
-    <div className="home">
+    <div>
       <div className="logo-wrap">
         <img className="logo" src="./deathnote.png" alt="deathnote-logo" />
       </div>
+
+      <div className="home-input-wrap">
+        <input
+          className="home-input"
+          type="text"
+          onChange={(e) => handleInput(e.target.value)}
+        />
+        <div className="home-input-search-btn-wrap">
+          <span className="home-input-search-btn" onClick={() => onSubmit()}>
+            검색
+          </span>
+        </div>
+      </div>
+
+      {summonerData ? (
+        <div className="summoner-info">
+          <div className="summoner-name-wrap">
+            <span className="summoner-name">{summonerData.name}</span>
+            <span className="summoner-name">
+              레벨{summonerData.summonerLevel}
+            </span>
+          </div>
+        </div>
+      ) : (
+        <></>
+      )}
     </div>
   );
 
@@ -49,6 +94,6 @@ function App() {
   //     </ul>
   //   </div>
   // );
-}
+};
 
 export default App;

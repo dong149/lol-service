@@ -3,10 +3,61 @@ body {
 }
 
 .logo-wrap {
-  width: 30%;
+  width: 20%;
   margin: 0 auto;
   margin-top: 140px;
   .logo {
     width: 100%;
+  }
+}
+.home-input-wrap {
+  position: relative;
+  margin: 0 auto;
+  margin-top: 60px;
+  width: 40%;
+  height: 40px;
+  background-color: white;
+  .home-input {
+    border: 0;
+    padding-top: 13px;
+    padding-left: 10px;
+    padding-bottom: 2px;
+    margin-left: 2px;
+    font-size: 16px;
+    width: 80%;
+    outline: none;
+  }
+  .home-input-search-btn-wrap {
+    // display: inline;
+    position: absolute;
+
+    top: 0;
+    right: 0;
+    margin-top: 4px;
+    margin-right: 8px;
+
+    background-color: #222222;
+    height: 34px;
+    width: 40px;
+    text-align: center;
+    line-height: 34px;
+    .home-input-search-btn {
+      font-size: 18px;
+      color: white;
+    }
+  }
+}
+
+.summoner-info {
+  background-color: white;
+  width: 40%;
+
+  margin: 0 auto;
+  margin-top: 30px;
+  .summoner-name-wrap {
+    height: 100px;
+    .summoner-name {
+      font-size: 30px;
+    }
   }
 }
