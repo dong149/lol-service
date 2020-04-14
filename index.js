@@ -22,11 +22,20 @@ const baseAPI = axios.create({
 const app = express();
 
 // Configure CORS
-app.use(
-  cors({
-    origin: "http://localhost:3000",
-  })
-);
+if (process.env.NODE_ENV === "production") {
+  app.use(
+    cors({
+      origin: "https://league-of-legend-service.herokuapp.com",
+    })
+  );
+} else {
+  app.use(
+    cors({
+      origin: "http://localhost:3000",
+    })
+  );
+}
+
 // mongoose.Promise = global.Promise;
 // mongoose.connect(
 //   process.env.MONGODB_URI || `mongodb://localhost:27017/node-react-starter`,
