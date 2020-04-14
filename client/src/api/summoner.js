@@ -2,7 +2,7 @@ import axios from "axios";
 
 let BASE_URL;
 if (process.env.NODE_ENV == "production") {
-  BASE_URL = `https://${process.env.PORT}`;
+  BASE_URL = "https://league-of-legend-service.herokuapp.com";
 } else {
   BASE_URL = "http://localhost:5000";
 }
