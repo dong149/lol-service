@@ -21,8 +21,10 @@
     "cors": "2.8.5",
     "dotenv": "8.2.0",
     "express": "4.17.1",
+    "http": "0.0.1-security",
     "http-proxy-middleware": "1.0.3",
-    "mongoose": "5.9.7"
+    "mongoose": "5.9.7",
+    "socket.io": "2.3.0"
   },
   "devDependencies": {
     "concurrently": "5.1.0",
