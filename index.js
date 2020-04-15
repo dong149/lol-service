@@ -54,12 +54,12 @@ if (process.env.NODE_ENV === "production") {
 // app.use(cors(corsOptions));
 
 app.use(bodyParser.json());
-
+app.use(express.static("client/build"));
 //IMPORT ROUTES
 require("./routes/productRoutes")(app);
 
 // LOL api
-app.get("/", (req, res) => res.send(`TOKEN: ${TOKEN}`));
+// app.get("/", (req, res) => res.send(`TOKEN: ${TOKEN}`));
 
 app.get("/api/summoner-by-name", (req, res) => {
   getSummonerByName(res, req.query.name);
@@ -89,8 +89,6 @@ const getLeagueByEncryptedId = async (res, encryptedId) => {
     .catch(console.log);
 };
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static("client/build"));
-
   const path = require("path");
   app.get("*", (req, res) => {
     res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
