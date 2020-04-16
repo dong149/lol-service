@@ -17,10 +17,23 @@ export const api = {
     const res = await axios.get(`/api/summoner-by-name?name=${summonerName}`);
     return res.data;
   },
+
   getLeagueByEncryptedId: async (encryptedId) => {
     const result = await axios.get(
       `/api/league-by-encrypted-id?id=${encryptedId}`
     );
     return result.data;
+  },
+  getChampionMasteryByEncryptedSummonerId: async (encryptedSummonerId) => {
+    const result = await axios.get(
+      `/api/champion-mastery-by-encrypted-summoner-id?id=${encryptedSummonerId}`
+    );
+    return result.data;
+  },
+  getChampionInfo: async () => {
+    const result = await axios.get(
+      "http://ddragon.leagueoflegends.com/cdn/10.8.1/data/ko_KR/champion.json"
+    );
+    return result.data.data;
   },
 };

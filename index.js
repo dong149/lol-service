@@ -71,7 +71,9 @@ app.get(
     getLeagueByEncryptedId(res, req.query.id);
   }
 );
-
+app.get("/api/champion-mastery-by-encrypted-summoner-id", (req, res) => {
+  getChampionMasteryByEncryptedSummonerId(res, req.query.id);
+});
 const getSummonerByName = async (res, summonerName) => {
   baseAPI
     .get(`summoner/v4/summoners/by-name/${encodeURI(summonerName)}`)
@@ -83,6 +85,14 @@ const getSummonerByName = async (res, summonerName) => {
 const getLeagueByEncryptedId = async (res, encryptedId) => {
   baseAPI
     .get(`league/v4/entries/by-summoner/${encryptedId}`)
+    .then((resDataFromRiotGames) => {
+      res.send(resDataFromRiotGames.data);
+    })
+    .catch(console.log);
+};
+const getChampionMasteryByEncryptedSummonerId = async (res, encryptedId) => {
+  baseAPI
+    .get(`champion-mastery/v4/champion-masteries/by-summoner/${encryptedId}`)
     .then((resDataFromRiotGames) => {
       res.send(resDataFromRiotGames.data);
     })
