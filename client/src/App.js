@@ -35,12 +35,12 @@ const App = () => {
       );
       const championInfo = await api.getChampionInfo();
       const tierTemp = `/ranked-emblems/Emblem_${rankTemp[0].tier}.png`;
-      const profileIconTemp = `http://ddragon.leagueoflegends.com/cdn/10.8.1/img/profileicon/${infoTemp.profileIconId}.png`;
+      const profileIconTemp = `https://ddragon.leagueoflegends.com/cdn/10.8.1/img/profileicon/${infoTemp.profileIconId}.png`;
 
       await championMasteryTemp.map((object) => {
         Object.keys(championInfo).forEach((key) => {
           if (championInfo[key].key === object.championId.toString()) {
-            const imgSrc = `http://ddragon.leagueoflegends.com/cdn/10.8.1/img/champion/${key}.png`;
+            const imgSrc = `https://ddragon.leagueoflegends.com/cdn/10.8.1/img/champion/${key}.png`;
             // 챔피언의 key와 그에 따른 챔피언 이미지를 champion 객체에 추가시켜줍니다.
             champion.push({ key, imgSrc, name: championInfo[key].name });
           }
