@@ -10,6 +10,7 @@ body {
   margin-top: 140px;
   .logo {
     width: 100%;
+    cursor: pointer;
   }
 }
 .home-input-wrap {
@@ -43,6 +44,7 @@ body {
     width: 40px;
     text-align: center;
     line-height: 34px;
+    cursor: pointer;
     .home-input-search-btn {
       font-size: 18px;
       color: white;
@@ -50,6 +52,23 @@ body {
   }
 }
 
+// 로컬 스토리지에 있는 최근 검색한 소환사 이름.
+.home-input-recent {
+  width: 50%;
+  margin: 0 auto;
+  background-color: white;
+  border-top: 1px solid rgba(0, 0, 33, 0.3);
+  .home-input-recent-text-wrap {
+    text-align: center;
+    display: inline-block;
+    width: 25%;
+    line-height: 60px;
+    .home-input-recent-text {
+      font-size: 14px;
+      cursor: pointer;
+    }
+  }
+}
 .summoner-info {
   background-color: white;
   width: 50%;
@@ -158,6 +177,24 @@ body {
           font-weight: lighter;
           color: grey;
         }
+      }
+    }
+  }
+  // 소환사 리뷰
+  .summoner-review {
+    width: 100%;
+    text-align: left;
+    padding-top: 30px;
+    padding-left: 30px;
+    .summoner-review-text {
+      font-size: 30px;
+    }
+    .summoner-review-input-wrap {
+      width: 80%;
+
+      .summoner-review-input {
+        width: 100%;
+        font-size: 15px;
       }
     }
   }
