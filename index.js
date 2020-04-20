@@ -7,7 +7,7 @@ const cors = require("cors");
 
 // const cors = require("cors");
 // IMPORT MODELS
-require("./models/Product");
+require("./models/Review");
 
 dotenv.config();
 const BASE_URL = "https://kr.api.riotgames.com/lol/";
@@ -36,27 +36,38 @@ if (process.env.NODE_ENV === "production") {
   );
 }
 
-// mongoose.Promise = global.Promise;
-// mongoose.connect(
-//   process.env.MONGODB_URI || `mongodb://localhost:27017/node-react-starter`,
-//   {
-//     useNewUrlParser: true,
-//     useFindAndModify: false,
-//     useCreateIndex: true,
-//     useUnifiedTopology: true,
-//   }
-// );
+mongoose.Promise = global.Promise;
+mongoose
+  .connect(
+    process.env.MONGODB_URI || `mongodb://localhost:27017/node-react-starter`,
+    {
+      useNewUrlParser: true,
+      useFindAndModify: false,
+      useCreateIndex: true,
+      useUnifiedTopology: true,
+    }
+  )
+  .then(
+    () => {
+      console.log("database connected😎");
+    },
+    (error) => {
+      console.log("Database could not be connected : " + error);
+    }
+  );
 
-// corsOptions = {
-//   origin: "https://league-of-legend-service.herokuapp.com",
-//   optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
-// };
-// app.use(cors(corsOptions));
+corsOptions = {
+  origin: "https://league-of-legend-service.herokuapp.com",
+  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+};
+app.use(cors(corsOptions));
 
 app.use(bodyParser.json());
-app.use(express.static("client/build"));
 //IMPORT ROUTES
-require("./routes/productRoutes")(app);
+const reviewRoutes = require("./routes/reviewRoutes")(app);
+// app.use("/reviews", reviewRoutes);
+
+app.use(express.static("client/build"));
 
 // LOL api
 // app.get("/", (req, res) => res.send(`TOKEN: ${TOKEN}`));
