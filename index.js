@@ -65,7 +65,7 @@ app.use(cors(corsOptions));
 app.use(bodyParser.json());
 //IMPORT ROUTES
 const reviewRoutes = require("./routes/reviewRoutes")(app);
-// app.use("/reviews", reviewRoutes);
+// app.use("/", reviewRoutes);
 
 app.use(express.static("client/build"));
 

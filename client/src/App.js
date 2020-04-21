@@ -6,7 +6,8 @@ import React, { useState, useEffect } from "react";
 import productService from "./services/productService";
 import reviewService from "./services/reviewService";
 import { api } from "./api/summoner.js";
-// import { format, formatDistanceToNow, add } from "date-fns";
+import { format, formatDistanceToNow } from "date-fns";
+import { ko } from "date-fns/locale";
 import "./styles/home.scss";
 
 const App = () => {
@@ -36,9 +37,14 @@ const App = () => {
   const [onInput, setOnInput] = useState(false);
 
   // const [review, setReview] = useState();
+  const [reviewViewOpen, setReviewViewOpen] = useState(false);
   const [reviewMode, setReviewMode] = useState(false);
   const [reviewText, setReviewText] = useState("");
+  const [review, setReview] = useState();
+  const [reviewChange, setReviewChange] = useState(false);
+
   const [summonerInfo, setSummonerInfo] = useState();
+
   const champion = [];
 
   const handleInput = (text) => {
@@ -108,30 +114,68 @@ const App = () => {
   const onGoodMode = () => {
     setReviewMode(true);
   };
+
   const onReviewSubmit = async (type) => {
     console.log(summonerInfo.name);
     try {
-      // const date = format(new Date(), "yyyyMMddHHmmss");
+      const date = format(new Date(), "yyyyMMddHHmmss");
       const review = {
         name: summonerInfo.name || "",
-        // date: date,
+        date: date,
         type: type,
         content: reviewText || "",
       };
       console.log(review);
       console.log(reviewText);
       reviewService.postReview(review);
-
+      setReviewChange(true);
+      setReviewText("");
       alert("성공적으로 제출되었습니다.");
     } catch (err) {
       console.error(err);
     }
   };
+
   useEffect(() => {
-    if (summonerInfo) {
-      reviewService.getReview(summonerInfo.name);
+    if ((summonerInfo && !review) || reviewChange === true) {
+      getReview();
     }
   });
+
+  const getReview = async () => {
+    let res = await reviewService.getReview();
+    // console.log(typeof res);
+    // console.log(res);
+    if (reviewChange === true) console.log("changed");
+    setReview(res);
+    setReviewChange(false);
+  };
+  // 언제 게시되었는지를 알려주는 함수입니다.
+  const handleDate = (date) => {
+    let dyear = parseInt(date.substring(0, 4));
+    let dmonth = parseInt(date.substring(4, 6)) - 1;
+    let dday = parseInt(date.substring(6, 8));
+    let dhour = parseInt(date.substring(8, 10));
+    let dmin = parseInt(date.substring(10, 12));
+    let dsec = parseInt(date.substring(12, 14));
+
+    let res = formatDistanceToNow(
+      new Date(dyear, dmonth, dday, dhour, dmin, dsec),
+      { includeSeconds: true, locale: ko }
+    );
+
+    let reslen = res.length;
+    if (res[reslen - 1] === "만") {
+      if (res[1] === "초") {
+        res = res.substring(0, 2);
+      } else {
+        res = res.substring(0, 3);
+      }
+    }
+    let result = res + " 전";
+    return result;
+  };
+
   return (
     <div>
       <div className="logo-wrap">
@@ -274,6 +318,7 @@ const App = () => {
                     className="summoner-review-bad-input"
                     onChange={(e) => handleReviewInput(e.target.value)}
                     rows="4"
+                    value={reviewText}
                     placeholder="소환사의 리뷰를 작성해주세요."
                   />
                 </div>
@@ -289,9 +334,67 @@ const App = () => {
               </>
             )}
             {/* 소환사 리뷰 view */}
-            {/* <div>
-
-              </div> */}
+            <div
+              className="review-view"
+              style={{
+                overflow: reviewViewOpen ? "visible" : "hidden",
+                height: reviewViewOpen ? "auto" : "300px",
+                // backgroundColor: reviewViewOpen ? "white" : "rgba(0,0,0,0.8)",
+              }}
+            >
+              {review &&
+                review
+                  .slice(0)
+                  .reverse()
+                  .map((data, key) => {
+                    if (data.name === summonerInfo.name) {
+                      if (data.type === "bad") {
+                        return (
+                          <div key={key} className="review-view-bad">
+                            <div className="review-view-date-bad-wrap">
+                              <span className="review-view-date-bad">
+                                {handleDate(data.date)}
+                              </span>
+                            </div>
+                            <div className="review-view-content-bad-wrap">
+                              <span className="review-view-content-bad">
+                                {data.content}
+                              </span>
+                            </div>
+                          </div>
+                        );
+                      } else {
+                        return (
+                          <div key={key} className="review-view-good">
+                            <div className="review-view-date-good-wrap">
+                              <span className="review-view-date-good">
+                                {handleDate(data.date)}
+                              </span>
+                            </div>
+                            <div className="review-view-content-good-wrap">
+                              <span className="review-view-content-good">
+                                {data.content}
+                              </span>
+                            </div>
+                          </div>
+                        );
+                      }
+                    }
+                  })}
+            </div>
+            <div
+              className="review-view-open-btn-wrap"
+              onClick={() => {
+                setReviewViewOpen(!reviewViewOpen);
+              }}
+              style={{
+                boxShadow: reviewViewOpen ? "rgba(1,1,1,0)" : "rgba(1,1,1,0)",
+              }}
+            >
+              <span className="review-view-open-btn-wrap">
+                {reviewViewOpen ? "닫기" : "열기"}
+              </span>
+            </div>
           </div>
           <span className="champion-info-text">CHAMPION</span>
           {summonerChampionInfo ? (

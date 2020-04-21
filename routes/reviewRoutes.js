@@ -5,7 +5,7 @@ const Review = mongoose.model("reviews");
 module.exports = (app) => {
   app.get(`/api/review`, async (req, res) => {
     let reviews = await Review.find();
-    return res.status(200).send(review);
+    return res.status(200).send(reviews);
   });
 
   app.post(`/api/review`, async (req, res) => {
