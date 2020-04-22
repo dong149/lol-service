@@ -10,6 +10,7 @@ import { format, formatDistanceToNow } from "date-fns";
 import { ko } from "date-fns/locale";
 import { SemipolarLoading } from "react-loadingg";
 import "./styles/home.scss";
+import Match from "./components/match";
 
 const App = () => {
   const [summoner, setSummoner] = useState();
@@ -78,7 +79,7 @@ const App = () => {
           window.location.reload();
           return;
         });
-        console.log(name);
+        // console.log(name);
         setSummonerInfo(infoTemp);
         nameCheck = true;
       } else {
@@ -124,6 +125,11 @@ const App = () => {
         localStorage.setItem("summonerName", JSON.stringify(history));
         setSummonerHistory(history);
       }
+
+      await Match(infoTemp.accountId, infoTemp.name);
+      // console.log(matchList);
+      // console.log(rankTemp);
+      // console.log(infoTemp);
       setLoading(false);
       setOnInput(false);
     } catch (err) {
@@ -138,7 +144,7 @@ const App = () => {
   };
 
   const onReviewSubmit = async (type) => {
-    console.log(summonerInfo.name);
+    // console.log(summonerInfo.name);
     try {
       const date = format(new Date(), "yyyyMMddHHmmss");
       const review = {
@@ -147,8 +153,8 @@ const App = () => {
         type: type,
         content: reviewText || "",
       };
-      console.log(review);
-      console.log(reviewText);
+      // console.log(review);
+      // console.log(reviewText);
       reviewService.postReview(review);
       setReviewChange(true);
       setReviewText("");
@@ -165,14 +171,14 @@ const App = () => {
   });
 
   const getReview = async (name) => {
-    console.log(name);
+    // console.log(name);
     let res = await reviewService.getSummonerReview(name);
     if (!res) {
       setReviewExist(false);
     } else {
       setReviewExist(true);
     }
-    if (reviewChange === true) console.log("changed");
+    // if (reviewChange === true) console.log("changed");
     setReview(res);
     setReviewChange(false);
   };

@@ -82,6 +82,16 @@ app.get(
     getLeagueByEncryptedId(res, req.query.id);
   }
 );
+// matchlist
+app.get("/api/matchlist", (req, res) => {
+  getMatchList(res, req.query.id);
+});
+// matchInfo
+app.get("/api/matchInfo", (req, res) => {
+  getMatchInfo(res, req.query.id);
+});
+
+// champion - mastery
 app.get("/api/champion-mastery-by-encrypted-summoner-id", (req, res) => {
   getChampionMasteryByEncryptedSummonerId(res, req.query.id);
 });
@@ -99,7 +109,7 @@ const getLeagueByEncryptedId = async (res, encryptedId) => {
     .then((resDataFromRiotGames) => {
       res.send(resDataFromRiotGames.data);
     })
-    .catch(console.log);
+    .catch((err) => res.status(400).send("error"));
 };
 const getChampionMasteryByEncryptedSummonerId = async (res, encryptedId) => {
   baseAPI
@@ -107,7 +117,23 @@ const getChampionMasteryByEncryptedSummonerId = async (res, encryptedId) => {
     .then((resDataFromRiotGames) => {
       res.send(resDataFromRiotGames.data);
     })
-    .catch(console.log);
+    .catch((err) => res.status(400).send("error"));
+};
+const getMatchList = async (res, encryptedId) => {
+  baseAPI
+    .get(`match/v4/matchlists/by-account/${encryptedId}`)
+    .then((resDataFromRiotGames) => {
+      res.send(resDataFromRiotGames.data);
+    })
+    .catch((err) => res.status(400).send("error"));
+};
+const getMatchInfo = async (res, matchId) => {
+  baseAPI
+    .get(`match/v4/matches/${matchId}`)
+    .then((resDataFromRiotGames) => {
+      res.send(resDataFromRiotGames.data);
+    })
+    .catch((err) => res.status(400).send("error"));
 };
 if (process.env.NODE_ENV === "production") {
   const path = require("path");

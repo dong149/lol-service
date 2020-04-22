@@ -36,4 +36,12 @@ export const api = {
     );
     return result.data.data;
   },
+  getMatchList: async (encryptedId) => {
+    const result = await axios.get(`/api/matchlist?id=${encryptedId}`);
+    return result.data;
+  },
+  getMatchInfo: async (matchId) => {
+    const result = await axios.get(`/api/matchInfo?id=${matchId}`);
+    return result.data;
+  },
 };
