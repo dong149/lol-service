@@ -8,6 +8,7 @@ import reviewService from "./services/reviewService";
 import { api } from "./api/summoner.js";
 import { format, formatDistanceToNow } from "date-fns";
 import { ko } from "date-fns/locale";
+import { SemipolarLoading } from "react-loadingg";
 import "./styles/home.scss";
 
 const App = () => {
@@ -24,7 +25,10 @@ const App = () => {
       history = { nameHistory: [] };
     }
   });
+  // loading
+  const [loading, setLoading] = useState(false);
 
+  // summoner
   const [summonerData, setSummonerData] = useState();
 
   const [summonerRank, setSummonerRank] = useState();
@@ -34,13 +38,15 @@ const App = () => {
   const [summonerChampionMastery, setSummonerChampionMastery] = useState();
   const [allChampionInfo, setAllChampionInfo] = useState();
   const [summonerChampionInfo, setSummonerChampionInfo] = useState();
+  const [championOpen, setChampionOpen] = useState(false);
   const [onInput, setOnInput] = useState(false);
 
-  // const [review, setReview] = useState();
+  // review
   const [reviewViewOpen, setReviewViewOpen] = useState(false);
   const [reviewMode, setReviewMode] = useState(false);
   const [reviewText, setReviewText] = useState("");
   const [review, setReview] = useState();
+  const [reviewExist, setReviewExist] = useState(false);
   const [reviewChange, setReviewChange] = useState(false);
 
   const [summonerInfo, setSummonerInfo] = useState();
@@ -60,15 +66,28 @@ const App = () => {
     }
   };
   const onSubmit = async (name) => {
+    setLoading(true);
     let nameCheck = false;
     let infoTemp;
     try {
       if (name) {
-        infoTemp = await api.getSummonerByName(name);
+        infoTemp = await api.getSummonerByName(name).catch((err) => {
+          alert("소환사 정보가 없습니다.");
+
+          setLoading(false);
+          window.location.reload();
+          return;
+        });
+        console.log(name);
         setSummonerInfo(infoTemp);
         nameCheck = true;
       } else {
-        infoTemp = await api.getSummonerByName(summoner);
+        infoTemp = await api.getSummonerByName(summoner).catch((err) => {
+          alert("소환사 정보가 없습니다.");
+          setLoading(false);
+          window.location.reload();
+          return;
+        });
         setSummonerInfo(infoTemp);
       }
 
@@ -97,12 +116,15 @@ const App = () => {
       setSummonerChampionMastery(championMasteryTemp);
       setAllChampionInfo(championInfo);
       setSummonerChampionInfo(champion);
+      setReviewText("");
+      setReview();
       if (!nameCheck) {
         history.nameHistory.push(infoTemp.name);
         history.nameHistory = Array.from(new Set(history.nameHistory));
         localStorage.setItem("summonerName", JSON.stringify(history));
         setSummonerHistory(history);
       }
+      setLoading(false);
       setOnInput(false);
     } catch (err) {
       console.error(err);
@@ -138,14 +160,18 @@ const App = () => {
 
   useEffect(() => {
     if ((summonerInfo && !review) || reviewChange === true) {
-      getReview();
+      getReview(summonerInfo.name);
     }
   });
 
-  const getReview = async () => {
-    let res = await reviewService.getReview();
-    // console.log(typeof res);
-    // console.log(res);
+  const getReview = async (name) => {
+    console.log(name);
+    let res = await reviewService.getSummonerReview(name);
+    if (!res) {
+      setReviewExist(false);
+    } else {
+      setReviewExist(true);
+    }
     if (reviewChange === true) console.log("changed");
     setReview(res);
     setReviewChange(false);
@@ -382,44 +408,86 @@ const App = () => {
                     }
                   })}
             </div>
-            <div
-              className="review-view-open-btn-wrap"
-              onClick={() => {
-                setReviewViewOpen(!reviewViewOpen);
-              }}
-              style={{
-                boxShadow: reviewViewOpen ? "rgba(1,1,1,0)" : "rgba(1,1,1,0)",
-              }}
-            >
-              <span className="review-view-open-btn-wrap">
-                {reviewViewOpen ? "닫기" : "열기"}
-              </span>
-            </div>
+            {reviewExist ? (
+              <div
+                className="review-view-open-btn-wrap"
+                onClick={() => {
+                  setReviewViewOpen(!reviewViewOpen);
+                }}
+                style={
+                  {
+                    // boxShadow: reviewViewOpen ? "" : "",
+                  }
+                }
+              >
+                <span className="review-view-open-btn">
+                  {reviewViewOpen ? "닫기" : "펼치기"}
+                </span>
+              </div>
+            ) : (
+              <div className="review-none-wrap">
+                <span>비어있습니다. 작성해주세요!</span>
+              </div>
+            )}
           </div>
           <span className="champion-info-text">CHAMPION</span>
-          {summonerChampionInfo ? (
-            summonerChampionInfo.map((obj, key) => {
-              return (
-                <div className="champion-info" key={key}>
-                  <div className="champion-info-each">
-                    <div className="champion-img-wrap">
-                      <img
-                        className="champion-img"
-                        src={obj.imgSrc}
-                        alt={obj.name}
-                      />
-                    </div>
-                    <div className="champion-name-wrap">
-                      <span className="champion-name">{obj.name}</span>
+          <div
+            className="champion-info-wrap"
+            style={{
+              overflow: championOpen ? "visible" : "hidden",
+              height: championOpen ? "auto" : "500px",
+              // backgroundColor: reviewViewOpen ? "white" : "rgba(0,0,0,0.8)",
+            }}
+          >
+            {summonerChampionInfo ? (
+              summonerChampionInfo.map((obj, key) => {
+                return (
+                  <div className="champion-info" key={key}>
+                    <div className="champion-info-each">
+                      <div className="champion-img-wrap">
+                        <img
+                          className="champion-img"
+                          src={obj.imgSrc}
+                          alt={obj.name}
+                        />
+                      </div>
+                      <div className="champion-name-wrap">
+                        <span className="champion-name">{obj.name}</span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              );
-            })
-          ) : (
-            <></>
-          )}
+                );
+              })
+            ) : (
+              <></>
+            )}
+          </div>
+          <div
+            className="champion-open-btn-wrap"
+            onClick={() => {
+              setChampionOpen(!championOpen);
+            }}
+            style={
+              {
+                // boxShadow: reviewViewOpen ? "" : "",
+              }
+            }
+          >
+            <span className="champion-open-btn">
+              {championOpen ? "닫기" : "펼치기"}
+            </span>
+          </div>
         </div>
+      ) : loading ? (
+        <SemipolarLoading
+          size="large"
+          color="#ffffff"
+          style={{
+            position: "relative",
+            top: "100px",
+            margin: "0 auto",
+          }}
+        />
       ) : (
         <></>
       )}

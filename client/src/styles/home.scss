@@ -309,6 +309,7 @@ body {
           display: block;
           margin-top: 10px;
           margin-bottom: 10px;
+          margin-left: 20px;
           .review-view-date-bad {
             color: grey;
             font-weight: lighter;
@@ -319,8 +320,11 @@ body {
           display: block;
           width: max-content;
           background-color: black;
+          box-shadow: 0 30px 60px 12px rgba(0, 0, 33, 0.05),
+            0 4px 24px 0 rgba(0, 0, 33, 0.05), 0 0 1px 0 rgba(0, 0, 33, 0.09);
           border-radius: 20px;
           padding: 20px 20px;
+          margin-left: 20px;
           .review-view-content-bad {
             white-space: pre-line;
             font-size: 20px;
@@ -334,6 +338,7 @@ body {
         width: 100%;
         height: auto;
         text-align: right;
+
         &:after {
           content: "";
           clear: both;
@@ -344,6 +349,7 @@ body {
 
           margin-top: 10px;
           margin-bottom: 10px;
+          margin-right: 20px;
 
           .review-view-date-good {
             color: grey;
@@ -355,10 +361,11 @@ body {
           display: block;
           float: right;
           width: max-content;
-          box-shadow: 0 30px 60px 12px rgba(0, 0, 33, 0.15),
-            0 4px 24px 0 rgba(0, 0, 33, 0.15), 0 0 1px 0 rgba(0, 0, 33, 0.19);
+          box-shadow: 0 30px 60px 12px rgba(0, 0, 33, 0.05),
+            0 4px 24px 0 rgba(0, 0, 33, 0.05), 0 0 1px 0 rgba(0, 0, 33, 0.09);
           border-radius: 20px;
           padding: 20px 20px;
+          margin-right: 20px;
 
           .review-view-content-good {
             white-space: pre-line;
@@ -369,12 +376,32 @@ body {
       }
     }
     .review-view-open-btn-wrap {
-      width: 90%;
+      margin-right: 60px;
+      height: 90px;
+      line-height: 90px;
+      margin-top: -90px;
+
       text-align: center;
-      .review-view-open-btn-wrap {
-        width: 100%;
-        font-size: 40px;
+      background-color: rgba(0, 0, 0, 0.8);
+      box-shadow: 0 -5px 300px -5px rgba(0, 0, 0, 0.8);
+      font-size: 40px;
+      font-weight: lighter;
+      color: white;
+      cursor: pointer;
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.9);
+        font-weight: normal;
+        color: white;
       }
+      .review-view-open-btn {
+      }
+    }
+    .review-none-wrap {
+      width: 90%;
+      margin-top: -250px;
+      text-align: center;
+      font-weight: lighter;
+      font-size: 50px;
     }
   }
   .champion-info-text {
@@ -385,30 +412,56 @@ body {
     font-size: 50px;
     font-weight: lighter;
   }
-  .champion-info {
+  .champion-info-wrap {
+    .champion-info {
+      width: 90%;
+      margin: 0 auto;
+      margin-top: 50px;
+      .champion-info-each {
+        width: 100%;
+        box-shadow: 0 30px 60px 12px rgba(0, 0, 33, 0.05),
+          0 4px 24px 0 rgba(0, 0, 33, 0.05), 0 0 1px 0 rgba(0, 0, 33, 0.09);
+        .champion-img-wrap {
+          display: inline-block;
+          width: 30%;
+
+          .champion-img {
+            filter: drop-shadow(0px 30px 30px rgba(0, 0, 33, 0.3));
+          }
+        }
+        .champion-name-wrap {
+          display: inline-block;
+          vertical-align: top;
+          margin-top: 30px;
+          .champion-name {
+            font-weight: lighter;
+            font-size: 30px;
+          }
+        }
+      }
+    }
+  }
+  .champion-open-btn-wrap {
     width: 90%;
+    height: 90px;
+    line-height: 90px;
     margin: 0 auto;
-    margin-top: 50px;
-    .champion-info-each {
-      width: 100%;
-      box-shadow: 0 30px 60px 12px rgba(0, 0, 33, 0.05),
-        0 4px 24px 0 rgba(0, 0, 33, 0.05), 0 0 1px 0 rgba(0, 0, 33, 0.09);
-      .champion-img-wrap {
-        display: inline-block;
-        width: 30%;
-        .champion-img {
-          filter: drop-shadow(0px 30px 30px rgba(0, 0, 33, 0.3));
-        }
-      }
-      .champion-name-wrap {
-        display: inline-block;
-        vertical-align: top;
-        margin-top: 30px;
-        .champion-name {
-          font-weight: lighter;
-          font-size: 30px;
-        }
-      }
+    margin-top: -90px;
+    position: relative;
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    box-shadow: 0 -5px 300px -5px rgba(0, 0, 0, 0.8);
+    font-size: 40px;
+    font-weight: lighter;
+    color: white;
+    z-index: 1000;
+    cursor: pointer;
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.9);
+      font-weight: normal;
+      color: white;
+    }
+    .champion-open-btn {
     }
   }
 }

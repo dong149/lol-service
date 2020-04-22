@@ -10,6 +10,11 @@ export default {
     // console.log(res.data);
     return res.data || [];
   },
+  getSummonerReview: async (name) => {
+    let res = await axios.get(`api/review/name/${name}`);
+    // console.log(res.data);
+    return res.data || [];
+  },
 
   postReview: async (object) => {
     await axios

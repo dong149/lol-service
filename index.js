@@ -91,7 +91,7 @@ const getSummonerByName = async (res, summonerName) => {
     .then((resDataFromRiotGames) => {
       res.send(resDataFromRiotGames.data);
     })
-    .catch(console.log);
+    .catch((err) => res.status(400).send("error"));
 };
 const getLeagueByEncryptedId = async (res, encryptedId) => {
   baseAPI
