@@ -31,7 +31,7 @@ const App = () => {
 
   // summoner
   const [summonerData, setSummonerData] = useState();
-
+  const [summonerMatchInfo, setSummonerMatchInfo] = useState();
   const [summonerRank, setSummonerRank] = useState();
   const [summonerTierSrc, setSummonerTierSrc] = useState();
   const [summonerProfileIconSrc, setSummonerProfileIconSrc] = useState();
@@ -68,6 +68,7 @@ const App = () => {
   };
   const onSubmit = async (name) => {
     setLoading(true);
+    setSummonerMatchInfo();
     let nameCheck = false;
     let infoTemp;
     try {
@@ -126,10 +127,10 @@ const App = () => {
         setSummonerHistory(history);
       }
 
-      await Match(infoTemp.accountId, infoTemp.name);
-      // console.log(matchList);
-      // console.log(rankTemp);
-      // console.log(infoTemp);
+      let matchInfo = await Match(infoTemp.accountId, infoTemp.name);
+      console.log("매치정보: ", matchInfo);
+      setSummonerMatchInfo(matchInfo);
+
       setLoading(false);
       setOnInput(false);
     } catch (err) {
@@ -268,20 +269,26 @@ const App = () => {
               </div>
             </div>
             <div className="summoner-percentage">
-              <div className="summoner-percentage-wrap">
-                <span className="summoner-percentage-defeat-text">패배각</span>
-                <span className="summoner-percentage" style={{ color: "red" }}>
-                  81
-                </span>
-                <span className="summoner-percentage">%</span>
-              </div>
-              <div className="summoner-percentage-wrap">
-                <span className="summoner-percentage-defeat-text">매너</span>
-                <span className="summoner-percentage" style={{ color: "red" }}>
-                  2
-                </span>
-                <span className="summoner-percentage">점</span>
-              </div>
+              {summonerMatchInfo ? (
+                <div className="summoner-percentage-wrap">
+                  <span className="summoner-percentage-info-text">
+                    최근20경기
+                  </span>
+                  <span
+                    className="summoner-percentage"
+                    style={{ color: "red" }}
+                  >
+                    {summonerMatchInfo.finalScore}
+                  </span>
+                  <span className="summoner-percentage">점</span>
+                </div>
+              ) : (
+                <div className="summoner-percentage-loading-wrap">
+                  <span className="summoner-percentage-loading">
+                    점수 계산중
+                  </span>
+                </div>
+              )}
             </div>
           </div>
           <hr
@@ -305,6 +312,109 @@ const App = () => {
               </div>
             </div>
           </div>
+          {/* 최근 경기 분석 */}
+          {summonerMatchInfo ? (
+            <div className="summoner-match-info">
+              <span className="summoner-match-info-text">최근 경기</span>
+              {summonerMatchInfo.rankInfo.map((obj, key) => {
+                return obj.win ? (
+                  <div className="summoner-match-win-wrap" key={key}>
+                    <div className="summoner-match-champion-img-wrap">
+                      <img
+                        className="summoner-match-champion-img"
+                        src={obj.championImg}
+                        alt={obj.champion}
+                      />
+                    </div>
+                    <div className="summoner-match-rank-wrap-wrap">
+                      <div className="summoner-match-rank-wrap">
+                        <span className="summoner-match-rank">
+                          딜량: {obj.dealRank}등
+                        </span>
+                      </div>
+                      <div className="summoner-match-rank-wrap">
+                        <span className="summoner-match-rank">
+                          탱킹: {obj.tankRank}등
+                        </span>
+                      </div>
+                    </div>
+                    <div className="summoner-match-rank-wrap-wrap">
+                      <div className="summoner-match-rank-wrap">
+                        <span className="summoner-match-rank">
+                          타워딜: {obj.towerDealRank}등
+                        </span>
+                      </div>
+
+                      <div className="summoner-match-rank-wrap">
+                        <span className="summoner-match-rank">
+                          kda점수: {obj.kdaScoreRank}등
+                        </span>
+                      </div>
+                    </div>
+                    <div className="summoner-match-kda-wrap">
+                      <span className="summoner-match-kda">
+                        {obj.kills}/{obj.deaths}/{obj.assists}
+                      </span>
+                    </div>
+                    <div className="summoner-deathnote-rank-wrap">
+                      <span className="summoner-deathnote-rank">
+                        {obj.deathNoteRank}
+                      </span>
+                      <span>등</span>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="summoner-match-defeat-wrap" key={key}>
+                    <div className="summoner-match-champion-img-wrap">
+                      <img
+                        className="summoner-match-champion-img"
+                        src={obj.championImg}
+                        alt={obj.champion}
+                      />
+                    </div>
+                    <div className="summoner-match-rank-wrap-wrap">
+                      <div className="summoner-match-rank-wrap">
+                        <span className="summoner-match-rank">
+                          딜량: {obj.dealRank}등
+                        </span>
+                      </div>
+                      <div className="summoner-match-rank-wrap">
+                        <span className="summoner-match-rank">
+                          탱킹: {obj.tankRank}등
+                        </span>
+                      </div>
+                    </div>
+                    <div className="summoner-match-rank-wrap-wrap">
+                      <div className="summoner-match-rank-wrap">
+                        <span className="summoner-match-rank">
+                          타워딜: {obj.towerDealRank}등
+                        </span>
+                      </div>
+
+                      <div className="summoner-match-rank-wrap">
+                        <span className="summoner-match-rank">
+                          kda점수: {obj.kdaScoreRank}등
+                        </span>
+                      </div>
+                    </div>
+                    <div className="summoner-match-kda-wrap">
+                      <span className="summoner-match-kda">
+                        {obj.kills}/{obj.deaths}/{obj.assists}
+                      </span>
+                    </div>
+                    <div className="summoner-deathnote-rank-wrap">
+                      <span className="summoner-deathnote-rank">
+                        {obj.deathNoteRank}
+                      </span>
+                      <span>등</span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <></>
+          )}
           {/* 소환사 리뷰 */}
           <div className="summoner-review">
             <span className="summoner-review-text">REVIEW</span>

@@ -95,7 +95,7 @@ body {
     }
     .summoner-info-wrap {
       display: inline-block;
-      width: 30%;
+      width: 50%;
       margin-left: 2%;
       padding-top: 25px;
       vertical-align: top;
@@ -117,19 +117,37 @@ body {
         }
       }
     }
-    // 소환사 패배각 / 매너 점수
+    // 소환사 폼 점수
     .summoner-percentage {
       display: inline-block;
+      vertical-align: top;
       .summoner-percentage-wrap {
         display: inline-block;
+        position: relative;
+        text-align: right;
+        left: 60%;
+        line-height: 45px;
+        .summoner-percentage-info-text {
+          display: block;
+          font-size: 30px;
+          font-weight: lighter;
+        }
         .summoner-percentage-defeat-text {
+          display: block;
           font-size: 20px;
           margin-left: 15px;
           margin-right: 10px;
         }
         .summoner-percentage {
-          font-size: 55px;
+          font-size: 70px;
           font-weight: bold;
+        }
+      }
+      .summoner-percentage-loading-wrap {
+        position: relative;
+        left: 10px;
+        .summoner-percentage-loading {
+          font-size: 30px;
         }
       }
     }
@@ -138,9 +156,9 @@ body {
     border: thin solid;
   }
   .summoner-tier {
-    width: 45%;
+    width: 95%;
+    margin: 0 auto;
     margin-top: 5%;
-    margin-left: 2%;
     box-shadow: 0 30px 60px 12px rgba(0, 0, 33, 0.05),
       0 4px 24px 0 rgba(0, 0, 33, 0.05), 0 0 1px 0 rgba(0, 0, 33, 0.09);
 
@@ -148,7 +166,7 @@ body {
       margin-left: 10px;
       margin-top: 5px;
       display: inline-block;
-      width: 40%;
+      width: 20%;
       background-color: transparent;
 
       .summoner-tier-img {
@@ -180,6 +198,120 @@ body {
       }
     }
   }
+  .summoner-match-info {
+    text-align: left;
+    padding-top: 80px;
+    padding-left: 30px;
+    width: 90%;
+    .summoner-match-info-text {
+      display: block;
+      font-size: 50px;
+      font-weight: lighter;
+    }
+    .summoner-match-win-wrap {
+      margin-bottom: 30px;
+      width: 100%;
+      box-shadow: 0 30px 60px 12px rgba(0, 0, 33, 0.05),
+        0 4px 24px 0 rgba(0, 0, 33, 0.05), 0 0 1px 0 rgba(0, 0, 33, 0.09);
+      background-color: #56c1ff;
+      text-align: left;
+      .summoner-match-champion-img-wrap {
+        display: inline-block;
+        width: 20%;
+
+        .summoner-match-champion-img {
+          filter: drop-shadow(0px 30px 30px rgba(0, 0, 33, 0.3));
+        }
+      }
+      .summoner-match-rank-wrap-wrap {
+        display: inline-block;
+        width: 20%;
+        vertical-align: top;
+        padding-top: 15px;
+
+        .summoner-match-rank-wrap {
+          padding-left: 20px;
+          width: 100%;
+          display: block;
+          .summoner-match-rank {
+            font-size: 30px;
+            font-weight: lighter;
+          }
+        }
+      }
+      .summoner-match-kda-wrap {
+        width: 20%;
+        display: inline-block;
+        vertical-align: top;
+        padding-top: 30px;
+        .summoner-match-kda {
+          font-size: 40px;
+          font-weight: lighter;
+        }
+      }
+      .summoner-deathnote-rank-wrap {
+        display: inline-block;
+        .summoner-deathnote-rank {
+          font-size: 40px;
+          font-weight: bold;
+        }
+      }
+    }
+    .summoner-match-defeat-wrap {
+      margin-bottom: 30px;
+      width: 100%;
+      background-color: #ff968d;
+      box-shadow: 0 30px 60px 12px rgba(0, 0, 33, 0.05),
+        0 4px 24px 0 rgba(0, 0, 33, 0.05), 0 0 1px 0 rgba(0, 0, 33, 0.09);
+      text-align: left;
+      .summoner-match-champion-img-wrap {
+        display: inline-block;
+        width: 20%;
+
+        .summoner-match-champion-img {
+          filter: drop-shadow(0px 30px 30px rgba(0, 0, 33, 0.3));
+        }
+      }
+      .summoner-match-rank-wrap-wrap {
+        display: inline-block;
+        width: 20%;
+        vertical-align: top;
+        padding-top: 15px;
+
+        .summoner-match-rank-wrap {
+          padding-left: 20px;
+          width: 100%;
+          display: block;
+          .summoner-match-rank {
+            font-size: 20px;
+            font-weight: lighter;
+          }
+        }
+      }
+      .summoner-match-kda-wrap {
+        width: 20%;
+        display: inline-block;
+        vertical-align: top;
+        padding-top: 30px;
+        .summoner-match-kda {
+          font-size: 35px;
+          font-weight: lighter;
+        }
+      }
+      .summoner-deathnote-rank-wrap {
+        display: inline-block;
+        padding-top: 30px;
+        padding-left: 10px;
+        text-align: right;
+        vertical-align: top;
+        .summoner-deathnote-rank {
+          font-size: 40px;
+          font-weight: bold;
+        }
+      }
+    }
+  }
+
   // 소환사 리뷰
   .summoner-review {
     width: 100%;
