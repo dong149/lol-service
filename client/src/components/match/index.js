@@ -1,97 +1,95 @@
 import { useState, useEffect } from "react";
 import { api } from "../../api/summoner";
 
-const Match = async (accountId, summonerName) => {
-  let matchList;
+const Match = async (accountId, summonerName, matchList) => {
+  // let matchList;
   let matchInfo;
   let sum = 0;
   let gameCnt = 0;
   let finalScore;
   let rankInfo = [];
   let isTroll = "";
+  let res = matchList;
   const championInfo = await api.getChampionInfo();
 
   const getMatchList = async () => {
     try {
-      matchList = await api.getMatchList(accountId).then(async (res) => {
-        // console.log(res);
-        for (let cnt = 0; cnt < 20; cnt++) {
-          matchInfo = await api.getMatchInfo(res.matches[cnt].gameId);
-          if (
-            matchInfo.gameMode === "CLASSIC" &&
-            matchInfo.gameDuration >= 800
-          ) {
-            let lane = res.matches[cnt].lane;
-            console.log(res.matches[cnt]);
-            // console.log(matchInfo);
-            console.log("라인 : ", lane);
-            gameCnt++;
-            // temp = deathNote Rank 와 win 의 정보가 담겨있다.
-            let rank = await deathNote(matchInfo, accountId);
-            // let win = temp.win;
-            // let rank = temp.deathNoteRank;
+      // matchList = await api.getMatchList(accountId).then(async (res) => {
+      // console.log(res);
+      for (let cnt = 0; cnt < 20; cnt++) {
+        matchInfo = await api.getMatchInfo(res.matches[cnt].gameId);
+        if (matchInfo.gameMode === "CLASSIC" && matchInfo.gameDuration >= 800) {
+          let lane = res.matches[cnt].lane;
+          console.log(res.matches[cnt]);
+          // console.log(matchInfo);
+          console.log("라인 : ", lane);
+          gameCnt++;
+          // temp = deathNote Rank 와 win 의 정보가 담겨있다.
+          let rank = await deathNote(matchInfo, accountId);
+          // let win = temp.win;
+          // let rank = temp.deathNoteRank;
 
-            if (rank.win) {
-              sum = sum + rank.deathNoteRank;
-            } else {
-              sum = sum + (rank.deathNoteRank - 1);
-            }
-            let championImg;
-            Object.keys(championInfo).forEach((key) => {
-              if (
-                championInfo[key].key === res.matches[cnt].champion.toString()
-              ) {
-                const imgSrc = `https://ddragon.leagueoflegends.com/cdn/10.8.1/img/champion/${key}.png`;
-                // 챔피언의 key와 그에 따른 챔피언 이미지를 champion 객체에 추가시켜줍니다.
-                championImg = imgSrc;
-              }
-            });
-            rankInfo.push({
-              dealRank: rank.dealRank,
-              tankRank: rank.tankRank,
-              visionRank: rank.visionRank,
-              towerDealRank: rank.towerDealRank,
-              kdaScoreRank: rank.kdaScoreRank,
-              champion: res.matches[cnt].champion,
-              deathNoteRank: rank.deathNoteRank,
-              kills: rank.kills,
-              deaths: rank.deaths,
-              assists: rank.assists,
-              win: rank.win,
-              championImg: championImg,
-            });
+          if (rank.win) {
+            sum = sum + rank.deathNoteRank;
+          } else {
+            sum = sum + (rank.deathNoteRank - 1);
           }
-
-          // // result = sum / gameCnt;
-          // // return result;
-
-          // console.log(cnt);
+          let championImg;
+          Object.keys(championInfo).forEach((key) => {
+            if (
+              championInfo[key].key === res.matches[cnt].champion.toString()
+            ) {
+              const imgSrc = `https://ddragon.leagueoflegends.com/cdn/10.8.1/img/champion/${key}.png`;
+              // 챔피언의 key와 그에 따른 챔피언 이미지를 champion 객체에 추가시켜줍니다.
+              championImg = imgSrc;
+            }
+          });
+          rankInfo.push({
+            dealRank: rank.dealRank,
+            tankRank: rank.tankRank,
+            visionRank: rank.visionRank,
+            towerDealRank: rank.towerDealRank,
+            kdaScoreRank: rank.kdaScoreRank,
+            champion: res.matches[cnt].champion,
+            deathNoteRank: rank.deathNoteRank,
+            kills: rank.kills,
+            deaths: rank.deaths,
+            assists: rank.assists,
+            win: rank.win,
+            championImg: championImg,
+          });
         }
-        // console.log(sum);
-        // console.log(gameCnt);
-        finalScore = (11 - (sum / gameCnt) * 1.0) * 10;
-        finalScore = Math.round(finalScore);
 
-        if (finalScore <= 20) {
-          isTroll = '"만나면 필히 닷지하세요."';
-        } else if (finalScore <= 40) {
-          isTroll = '"개트롤입니다."';
-        } else if (finalScore <= 50) {
-          isTroll = '"트롤러입니다."';
-        } else if (finalScore <= 60) {
-          isTroll = '"딱! 현지인"';
-        } else if (finalScore <= 70) {
-          isTroll = '"평타이상입니다."';
-        } else if (finalScore <= 80) {
-          isTroll = '"버스기사입니다."';
-        } else if (finalScore <= 90) {
-          isTroll = '"같이하면 꽁승"';
-        } else if (finalScore <= 100) {
-          isTroll = '"우주비행사급 캐리"';
-        }
-        // console.log("당신이 경기한 랭크게임 수는 : ", gameCnt, "경기입니다.");
-        // console.log("최종스코어는 : ", finalScore, "점입니다.");
-      });
+        // // result = sum / gameCnt;
+        // // return result;
+
+        // console.log(cnt);
+      }
+      // console.log(sum);
+      // console.log(gameCnt);
+      finalScore = (11 - (sum / gameCnt) * 1.0) * 10;
+      finalScore = Math.round(finalScore);
+
+      if (finalScore <= 20) {
+        isTroll = '"만나면 필히 닷지하세요."';
+      } else if (finalScore <= 40) {
+        isTroll = '"개트롤입니다."';
+      } else if (finalScore <= 50) {
+        isTroll = '"트롤러입니다."';
+      } else if (finalScore <= 60) {
+        isTroll = '"딱! 현지인"';
+      } else if (finalScore <= 70) {
+        isTroll = '"평타이상입니다."';
+      } else if (finalScore <= 80) {
+        isTroll = '"버스기사입니다."';
+      } else if (finalScore <= 90) {
+        isTroll = '"같이하면 꽁승"';
+      } else if (finalScore <= 100) {
+        isTroll = '"우주비행사급 캐리"';
+      }
+      // console.log("당신이 경기한 랭크게임 수는 : ", gameCnt, "경기입니다.");
+      // console.log("최종스코어는 : ", finalScore, "점입니다.");
+      // });
     } catch (err) {
       console.log(err);
     }

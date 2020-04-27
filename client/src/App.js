@@ -120,14 +120,16 @@ const App = () => {
       setSummonerChampionInfo(champion);
       setReviewText("");
       setReview();
+      console.log(infoTemp);
       if (!nameCheck) {
         history.nameHistory.push(infoTemp.name);
         history.nameHistory = Array.from(new Set(history.nameHistory));
         localStorage.setItem("summonerName", JSON.stringify(history));
         setSummonerHistory(history);
       }
+      let matchList = await api.getMatchList(infoTemp.accountId);
+      let matchInfo = await Match(infoTemp.accountId, infoTemp.name, matchList);
 
-      let matchInfo = await Match(infoTemp.accountId, infoTemp.name);
       console.log("매치정보: ", matchInfo);
       console.log("rankinfo: ", rankTemp);
       setSummonerMatchInfo(matchInfo);
