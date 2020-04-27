@@ -14,19 +14,22 @@ const Match = async (accountId, summonerName, matchList) => {
 
   let gameList = [];
   let rankCnt = 0;
+  console.log("for문 시작", new Date());
   for (let cnt = 0; cnt < 20; cnt++) {
     let temp = await api.getMatchInfo(res.matches[cnt].gameId);
     if (temp.gameMode === "CLASSIC" && temp.gameDuration >= 800) {
-      // console.log(temp);
+      console.log("gameList:", temp);
       temp["cnt"] = cnt;
       gameList.push(temp);
       rankCnt++;
     }
   }
+  console.log("for문 끝", new Date());
   // console.log("gameList:", gameList);
   // console.log("rankCnt:", rankCnt);
 
   const getMatchList = async () => {
+    console.log("getMatchList함수 시작", new Date());
     try {
       // matchList = await api.getMatchList(accountId).then(async (res) => {
       // console.log(res);
@@ -102,11 +105,13 @@ const Match = async (accountId, summonerName, matchList) => {
   await getMatchList();
   let ret = { finalScore: finalScore, rankInfo: rankInfo, isTroll: isTroll };
   // console.log(ret);
+  console.log("getMatchList함수 끝", new Date());
   if (ret) return ret;
 };
 
 // deathNote Rank 를 리턴하는 함수입니다.
 const deathNote = async (matchInfo, accountId) => {
+  console.log("데스노트함수 시작", new Date());
   let participantId = 0;
   for (let i = 0; i < 10; i++) {
     if (matchInfo.participantIdentities[i].player.accountId === accountId) {
@@ -269,6 +274,7 @@ const deathNote = async (matchInfo, accountId) => {
     deaths: deaths,
     assists: assists,
   };
+  console.log("데스노트함수 끝", new Date());
   return ret;
 };
 
