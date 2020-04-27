@@ -12,62 +12,70 @@ const Match = async (accountId, summonerName, matchList) => {
   let res = matchList;
   const championInfo = await api.getChampionInfo();
 
+  let gameList = [];
+  let rankCnt = 0;
+  for (let cnt = 0; cnt < 20; cnt++) {
+    let temp = await api.getMatchInfo(res.matches[cnt].gameId);
+    if (temp.gameMode === "CLASSIC" && temp.gameDuration >= 800) {
+      // console.log(temp);
+      temp["cnt"] = cnt;
+      gameList.push(temp);
+      rankCnt++;
+    }
+  }
+  // console.log("gameList:", gameList);
+  // console.log("rankCnt:", rankCnt);
+
   const getMatchList = async () => {
     try {
       // matchList = await api.getMatchList(accountId).then(async (res) => {
       // console.log(res);
-      for (let cnt = 0; cnt < 20; cnt++) {
-        matchInfo = await api.getMatchInfo(res.matches[cnt].gameId);
-        if (matchInfo.gameMode === "CLASSIC" && matchInfo.gameDuration >= 800) {
-          let lane = res.matches[cnt].lane;
-          console.log(res.matches[cnt]);
-          // console.log(matchInfo);
-          console.log("라인 : ", lane);
-          gameCnt++;
-          // temp = deathNote Rank 와 win 의 정보가 담겨있다.
-          let rank = await deathNote(matchInfo, accountId);
-          // let win = temp.win;
-          // let rank = temp.deathNoteRank;
+      // for (let cnt = 0; cnt < 20; cnt++) {
+      // matchInfo = await api.getMatchInfo(res.matches[cnt].gameId);
+      for (let i = 0; i < rankCnt; i++) {
+        let matchInfo = gameList[i];
+        let cnt = matchInfo.cnt;
+        let lane = res.matches[cnt].lane;
+        // console.log(res.matches[cnt]);
+        // console.log(matchInfo);
+        // console.log("라인 : ", lane);
+        gameCnt++;
+        // temp = deathNote Rank 와 win 의 정보가 담겨있다.
+        let rank = await deathNote(matchInfo, accountId);
 
-          if (rank.win) {
-            sum = sum + rank.deathNoteRank;
-          } else {
-            sum = sum + (rank.deathNoteRank - 1);
-          }
-          let championImg;
-          Object.keys(championInfo).forEach((key) => {
-            if (
-              championInfo[key].key === res.matches[cnt].champion.toString()
-            ) {
-              const imgSrc = `https://ddragon.leagueoflegends.com/cdn/10.8.1/img/champion/${key}.png`;
-              // 챔피언의 key와 그에 따른 챔피언 이미지를 champion 객체에 추가시켜줍니다.
-              championImg = imgSrc;
-            }
-          });
-          rankInfo.push({
-            dealRank: rank.dealRank,
-            tankRank: rank.tankRank,
-            visionRank: rank.visionRank,
-            towerDealRank: rank.towerDealRank,
-            kdaScoreRank: rank.kdaScoreRank,
-            champion: res.matches[cnt].champion,
-            deathNoteRank: rank.deathNoteRank,
-            kills: rank.kills,
-            deaths: rank.deaths,
-            assists: rank.assists,
-            win: rank.win,
-            championImg: championImg,
-          });
+        // let win = temp.win;
+        // let rank = temp.deathNoteRank;
+
+        if (rank.win) {
+          sum = sum + rank.deathNoteRank;
+        } else {
+          sum = sum + (rank.deathNoteRank - 1);
         }
-
-        // // result = sum / gameCnt;
-        // // return result;
-
-        // console.log(cnt);
+        let championImg;
+        Object.keys(championInfo).forEach((key) => {
+          if (championInfo[key].key === res.matches[cnt].champion.toString()) {
+            const imgSrc = `https://ddragon.leagueoflegends.com/cdn/10.8.1/img/champion/${key}.png`;
+            // 챔피언의 key와 그에 따른 챔피언 이미지를 champion 객체에 추가시켜줍니다.
+            championImg = imgSrc;
+          }
+        });
+        rankInfo.push({
+          dealRank: rank.dealRank,
+          tankRank: rank.tankRank,
+          visionRank: rank.visionRank,
+          towerDealRank: rank.towerDealRank,
+          kdaScoreRank: rank.kdaScoreRank,
+          champion: res.matches[cnt].champion,
+          deathNoteRank: rank.deathNoteRank,
+          kills: rank.kills,
+          deaths: rank.deaths,
+          assists: rank.assists,
+          win: rank.win,
+          championImg: championImg,
+        });
+        // console.log("rankinfo:", rankInfo);
       }
-      // console.log(sum);
-      // console.log(gameCnt);
-      finalScore = (11 - (sum / gameCnt) * 1.0) * 10;
+      finalScore = (11 - (sum / rankCnt) * 1.0) * 10;
       finalScore = Math.round(finalScore);
 
       if (finalScore <= 20) {
@@ -87,17 +95,14 @@ const Match = async (accountId, summonerName, matchList) => {
       } else if (finalScore <= 100) {
         isTroll = '"우주비행사급 캐리"';
       }
-      // console.log("당신이 경기한 랭크게임 수는 : ", gameCnt, "경기입니다.");
-      // console.log("최종스코어는 : ", finalScore, "점입니다.");
-      // });
     } catch (err) {
       console.log(err);
     }
   };
   await getMatchList();
   let ret = { finalScore: finalScore, rankInfo: rankInfo, isTroll: isTroll };
-  console.log(ret);
-  return ret;
+  // console.log(ret);
+  if (ret) return ret;
 };
 
 // deathNote Rank 를 리턴하는 함수입니다.
@@ -179,7 +184,6 @@ const deathNote = async (matchInfo, accountId) => {
   let visionRank = [];
   let towerDealRank = [];
   let kdaScoreRank = [];
-  // console.log("deal량 array:", deal);
   for (let j = 1; j <= 10; j++) {
     for (let i = 0; i < 10; i++) {
       if (deal[i].participantId === j) {
@@ -235,7 +239,7 @@ const deathNote = async (matchInfo, accountId) => {
   let deathNoteRank = 0;
   for (let i = 0; i < 10; i++) {
     if (deathNoteScore[i].participantId === participantId) {
-      console.log(deathNoteScore[i].deathNoteScore);
+      // console.log(deathNoteScore[i].deathNoteScore);
       deathNoteRank = 10 - i;
       break;
     }
@@ -246,49 +250,6 @@ const deathNote = async (matchInfo, accountId) => {
   let kills = matchInfo.participants[participantId - 1].stats.kills;
   let deaths = matchInfo.participants[participantId - 1].stats.deaths;
   let assists = matchInfo.participants[participantId - 1].stats.assists;
-
-  // if (win === true) {
-  //   console.log("게임에서 승리하셨습니다.");
-  // } else {
-  //   console.log("게임에서 패배하셨습니다.");
-  // }
-  // console.log(championName, "을 플레이하셨습니다.");
-  // console.log("당신의 순서는: ", participantId, "번 째 입니다.");
-  // console.log(
-  //   "당신의 딜량은: ",
-  //   dealRank.find((rank) => rank.participantId === participantId).rank,
-  //   "번 째 입니다."
-  // );
-  // console.log(
-  //   "당신의 탱킹은: ",
-  //   tankRank.find((rank) => rank.participantId === participantId).rank,
-  //   "번 째 입니다."
-  // );
-  // console.log(
-  //   "당신의 시야점수는: ",
-  //   visionRank.find((rank) => rank.participantId === participantId).rank,
-  //   "번 째 입니다."
-  // );
-  // console.log(
-  //   "당신의 타워딜량은: ",
-  //   towerDealRank.find((rank) => rank.participantId === participantId).rank,
-  //   "번 째 입니다."
-  // );
-  // console.log(
-  //   "당신의 kdaScore는: ",
-  //   kdaScoreRank.find((rank) => rank.participantId === participantId).rank,
-  //   "번 째 입니다."
-  // );
-  // console.log("deathNoteRank랭킹은 :", deathNoteRank, "위 입니다.");
-  // console.log("킬: ", kills, "회 기록하셨습니다.");
-  // console.log("데스: ", deaths, "회 기록하셨습니다.");
-  // console.log("어시스트: ", assists, "회 기록하셨습니다.");
-  // console.log("k/d/a: ", kills, "/", deaths, "/", assists, " 입니다.");
-  // console.log(
-  //   "kda 점수는 = ",
-  //   kills * 3 + assists * 2 - deaths * 2,
-  //   "점 입니다."
-  // );
   let ret = {
     dealRank: dealRank.find((rank) => rank.participantId === participantId)
       .rank,
@@ -308,11 +269,6 @@ const deathNote = async (matchInfo, accountId) => {
     deaths: deaths,
     assists: assists,
   };
-
-  // if (!win) {
-  //   deathNoteRank = deathNoteRank - 1;
-  // }
-  // return deathNoteRank;
   return ret;
 };
 

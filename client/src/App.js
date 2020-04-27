@@ -215,11 +215,7 @@ const App = () => {
   return (
     <div>
       <div className="logo-wrap">
-        <img
-          className="logo"
-          src="https://github.com/dong149/image_resources/blob/master/deathnote/deathnote.png?raw=true"
-          alt="deathnote-logo"
-        />
+        <img className="logo" src="./deathnote.png" alt="deathnote-logo" />
       </div>
       <div className="home-input-wrap">
         <input
