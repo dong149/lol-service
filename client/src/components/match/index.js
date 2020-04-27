@@ -8,6 +8,7 @@ const Match = async (accountId, summonerName) => {
   let gameCnt = 0;
   let finalScore;
   let rankInfo = [];
+  let isTroll = "";
   const championInfo = await api.getChampionInfo();
 
   const getMatchList = async () => {
@@ -70,6 +71,24 @@ const Match = async (accountId, summonerName) => {
         // console.log(gameCnt);
         finalScore = (11 - (sum / gameCnt) * 1.0) * 10;
         finalScore = Math.round(finalScore);
+
+        if (finalScore <= 20) {
+          isTroll = '"만나면 필히 닷지하세요."';
+        } else if (finalScore <= 40) {
+          isTroll = '"개트롤입니다."';
+        } else if (finalScore <= 50) {
+          isTroll = '"트롤러입니다."';
+        } else if (finalScore <= 60) {
+          isTroll = '"딱! 현지인"';
+        } else if (finalScore <= 70) {
+          isTroll = '"평타이상입니다."';
+        } else if (finalScore <= 80) {
+          isTroll = '"버스기사입니다."';
+        } else if (finalScore <= 90) {
+          isTroll = '"같이하면 꽁승"';
+        } else if (finalScore <= 100) {
+          isTroll = '"우주비행사급 캐리"';
+        }
         // console.log("당신이 경기한 랭크게임 수는 : ", gameCnt, "경기입니다.");
         // console.log("최종스코어는 : ", finalScore, "점입니다.");
       });
@@ -78,7 +97,7 @@ const Match = async (accountId, summonerName) => {
     }
   };
   await getMatchList();
-  let ret = { finalScore: finalScore, rankInfo: rankInfo };
+  let ret = { finalScore: finalScore, rankInfo: rankInfo, isTroll: isTroll };
   console.log(ret);
   return ret;
 };

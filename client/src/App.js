@@ -129,6 +129,7 @@ const App = () => {
 
       let matchInfo = await Match(infoTemp.accountId, infoTemp.name);
       console.log("매치정보: ", matchInfo);
+      console.log("rankinfo: ", rankTemp);
       setSummonerMatchInfo(matchInfo);
 
       setLoading(false);
@@ -212,7 +213,11 @@ const App = () => {
   return (
     <div>
       <div className="logo-wrap">
-        <img className="logo" src="./deathnote.png" alt="deathnote-logo" />
+        <img
+          className="logo"
+          src="https://github.com/dong149/image_resources/blob/master/deathnote/deathnote.png?raw=true"
+          alt="deathnote-logo"
+        />
       </div>
       <div className="home-input-wrap">
         <input
@@ -268,7 +273,12 @@ const App = () => {
                 </span>
               </div>
             </div>
-            <div className="summoner-percentage">
+            {summonerMatchInfo && (
+              <div className="troll-text-wrap">
+                <span className="troll-text">{summonerMatchInfo.isTroll}</span>
+              </div>
+            )}
+            {/* <div className="summoner-percentage">
               {summonerMatchInfo ? (
                 <div className="summoner-percentage-wrap">
                   <span className="summoner-percentage-info-text">
@@ -289,7 +299,7 @@ const App = () => {
                   </span>
                 </div>
               )}
-            </div>
+            </div> */}
           </div>
           <hr
             style={{ color: "#d5d5d5", border: "thin solid" }}
@@ -307,10 +317,67 @@ const App = () => {
               <div className="summoner-tier-info-tier-wrap">
                 <span className="summoner-tier-info-tier">{summonerTier}</span>
               </div>
-              <div className="summoner-tier-info-percentage-wrap">
-                <span className="summoner-tier-info-percentage">승률 52%</span>
-              </div>
+              {summonerRank && (
+                <>
+                  <div className="summoner-tier-info-percentage-wrap">
+                    <span className="summoner-tier-info-percentage">
+                      승률
+                      {Math.round(
+                        (summonerRank[0].wins /
+                          (summonerRank[0].wins + summonerRank[0].losses)) *
+                          1.0 *
+                          100
+                      )}
+                      %
+                    </span>
+                  </div>
+                  <div className="summoner-tier-info-percentage-wrap">
+                    <span className="summoner-tier-info-percentage">
+                      {summonerRank[0].wins}승 {summonerRank[0].losses}패
+                    </span>
+                  </div>
+                </>
+              )}
             </div>
+
+            {summonerMatchInfo ? (
+              <div className="summoner-percentage">
+                <div className="summoner-percentage-wrap">
+                  <span className="summoner-percentage-info-text">
+                    최근20경기
+                  </span>
+                  <div className="summoner-percentage-span-wrap">
+                    <span className="summoner-percentage">점</span>
+                    <span
+                      className="summoner-percentage"
+                      style={{ color: "red" }}
+                    >
+                      {summonerMatchInfo.finalScore}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="summoner-percentage-loading-wrap">
+                <div className="summoner-percentage-loading-text-wrap">
+                  <span className="summoner-percentage-loading-text">
+                    점수 계산중...
+                  </span>
+                </div>
+                <div className="summoner-loading-img-wrap">
+                  <SemipolarLoading
+                    size="large"
+                    color="#000000"
+                    style={{
+                      position: "relative",
+                      display: "inline-display",
+                      left: "40px",
+                      top: "15px",
+                    }}
+                  />
+                </div>
+              </div>
+            )}
           </div>
           {/* 최근 경기 분석 */}
           {summonerMatchInfo ? (
@@ -546,7 +613,7 @@ const App = () => {
               </div>
             )}
           </div>
-          <span className="champion-info-text">CHAMPION</span>
+          {/* <span className="champion-info-text">CHAMPION</span>
           <div
             className="champion-info-wrap"
             style={{
@@ -592,7 +659,7 @@ const App = () => {
             <span className="champion-open-btn">
               {championOpen ? "닫기" : "펼치기"}
             </span>
-          </div>
+          </div> */}
         </div>
       ) : loading ? (
         <SemipolarLoading
