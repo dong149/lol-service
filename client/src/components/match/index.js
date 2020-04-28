@@ -15,42 +15,50 @@ const Match = async (accountId, summonerName, matchList) => {
   let gameList = [];
   let rankCnt = 0;
 
-  // console.log("1 start", new Date());
-  // let test1 = await api.getMatchInfo(res.matches[0].gameId);
-  // console.log("1 start end", test1, new Date());
-  // let test2 = await api.getMatchInfo(res.matches[1].gameId);
-  // console.log("2 start end", test2, new Date());
-  // let test3 = await api.getMatchInfo(res.matches[2].gameId);
-  // console.log("3 start end", test3, new Date());
-  // let test4 = await api.getMatchInfo(res.matches[3].gameId);
-  // console.log("4 start end", test4, new Date());
-  // let test5 = await api.getMatchInfo(res.matches[4].gameId);
-  // console.log("5 start end", test5, new Date());
-  // let test6 = await api.getMatchInfo(res.matches[5].gameId);
-  // console.log("6 start end", test6, new Date());
-  // let test7 = await api.getMatchInfo(res.matches[6].gameId);
-  // console.log("7 start end", test7, new Date());
-  // let test8 = await api.getMatchInfo(res.matches[7].gameId);
-  // console.log("8 start end", test8, new Date());
-  // let test9 = await api.getMatchInfo(res.matches[8].gameId);
-  // console.log("9 start end", test9, new Date());
-  // let test10 = await api.getMatchInfo(res.matches[9].gameId);
-  // console.log("10 start end", test10, new Date());
-  // let test11 = await api.getMatchInfo(res.matches[10].gameId);
-  // console.log("11 start end", test11, new Date());
-  // let test12 = await api.getMatchInfo(res.matches[11].gameId);
-  // console.log("12 start end", test12, new Date());
-
   console.log("for문 시작", new Date());
+
+  // Promise.all(promises).then(games => {
+  //   console.log(games)
+  // })
+  // //or
+  // const games = await Promise.all(promises)
+  // console.log(games)
+
+  const promises = [];
+
   for (let cnt = 0; cnt < 20; cnt++) {
-    let temp = await api.getMatchInfo(res.matches[cnt].gameId);
-    if (temp.gameMode === "CLASSIC" && temp.gameDuration >= 800) {
-      console.log("gameList:", temp);
-      temp["cnt"] = cnt;
-      gameList.push(temp);
-      rankCnt++;
-    }
+    promises.push(api.getMatchInfo(res.matches[cnt].gameId));
   }
+  await Promise.all(promises).then((games) => {
+    // let cnt = 0;
+
+    for (let cnt = 0; cnt < 20; cnt++) {
+      let temp = games[cnt];
+      if (temp.gameMode === "CLASSIC" && temp.gameDuration >= 800) {
+        temp["cnt"] = cnt;
+        gameList.push(temp);
+        console.log(temp);
+        rankCnt++;
+      }
+    }
+    // games.map((temp) => {
+    //   if (temp.gameMode === "CLASSIC" && temp.gameDuration >= 800) {
+    //     temp["cnt"] = cnt;
+    //     gameList.push(temp);
+    //     console.log(temp);
+    //     rankCnt++;
+    //   }
+    //   cnt++;
+    // });
+  });
+  // let temp = await api.getMatchInfo(res.matches[cnt].gameId);
+  // if (temp.gameMode === "CLASSIC" && temp.gameDuration >= 800) {
+  //   console.log("gameList:", temp);
+  //   temp["cnt"] = cnt;
+  //   gameList.push(temp);
+  //   rankCnt++;
+  // }
+  // }
   console.log("for문 끝", new Date());
   // console.log("gameList:", gameList);
   // console.log("rankCnt:", rankCnt);
@@ -63,6 +71,7 @@ const Match = async (accountId, summonerName, matchList) => {
       // for (let cnt = 0; cnt < 20; cnt++) {
       // matchInfo = await api.getMatchInfo(res.matches[cnt].gameId);
       for (let i = 0; i < rankCnt; i++) {
+        console.log(gameList[i]);
         let matchInfo = gameList[i];
         let cnt = matchInfo.cnt;
         let lane = res.matches[cnt].lane;
