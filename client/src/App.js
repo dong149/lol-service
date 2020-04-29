@@ -12,6 +12,18 @@ import { SemipolarLoading } from "react-loadingg";
 import "./styles/home.scss";
 import Match from "./components/match";
 
+const isEmpty = function (value) {
+  if (
+    value == "" ||
+    value == null ||
+    value == undefined ||
+    (value != null && typeof value == "object" && !Object.keys(value).length)
+  ) {
+    return true;
+  } else {
+    return false;
+  }
+};
 const App = () => {
   const [summoner, setSummoner] = useState();
   const [summonerHistory, setSummonerHistory] = useState(
@@ -98,7 +110,12 @@ const App = () => {
         infoTemp.id
       );
       const championInfo = await api.getChampionInfo();
-      const tierTemp = `/ranked-emblems/Emblem_${rankTemp[0].tier}.png`;
+      let tierTemp;
+      if (!isEmpty(rankTemp)) {
+        tierTemp = `/ranked-emblems/Emblem_${rankTemp[0].tier}.png`;
+      } else {
+        tierTemp = `/ranked-emblems/Emblem_UNRANK.png`;
+      }
       const profileIconTemp = `https://ddragon.leagueoflegends.com/cdn/10.8.1/img/profileicon/${infoTemp.profileIconId}.png`;
 
       await championMasteryTemp.map((object) => {
@@ -114,7 +131,8 @@ const App = () => {
       setSummonerRank(rankTemp);
       setSummonerTierSrc(tierTemp);
       setSummonerProfileIconSrc(profileIconTemp);
-      setSummonerTier(rankTemp[0].tier + " " + rankTemp[0].rank);
+      if (!isEmpty(rankTemp))
+        setSummonerTier(rankTemp[0].tier + " " + rankTemp[0].rank);
       setSummonerChampionMastery(championMasteryTemp);
       setAllChampionInfo(championInfo);
       setSummonerChampionInfo(champion);
@@ -315,7 +333,7 @@ const App = () => {
               <div className="summoner-tier-info-tier-wrap">
                 <span className="summoner-tier-info-tier">{summonerTier}</span>
               </div>
-              {summonerRank && (
+              {!isEmpty(summonerRank) && (
                 <>
                   <div className="summoner-tier-info-percentage-wrap">
                     <span className="summoner-tier-info-percentage">
@@ -342,7 +360,7 @@ const App = () => {
               <div className="summoner-percentage">
                 <div className="summoner-percentage-wrap">
                   <span className="summoner-percentage-info-text">
-                    최근20경기
+                    최근{summonerMatchInfo.rankCnt}경기
                   </span>
                   <div className="summoner-percentage-span-wrap">
                     <span className="summoner-percentage">점</span>
@@ -590,21 +608,27 @@ const App = () => {
                   })}
             </div>
             {reviewExist ? (
-              <div
-                className="review-view-open-btn-wrap"
-                onClick={() => {
-                  setReviewViewOpen(!reviewViewOpen);
-                }}
-                style={
-                  {
-                    // boxShadow: reviewViewOpen ? "" : "",
-                  }
-                }
-              >
-                <span className="review-view-open-btn">
-                  {reviewViewOpen ? "닫기" : "펼치기"}
-                </span>
-              </div>
+              <>
+                {reviewViewOpen ? (
+                  <div
+                    className="review-view-close-btn-wrap"
+                    onClick={() => {
+                      setReviewViewOpen(!reviewViewOpen);
+                    }}
+                  >
+                    <span className="review-view-close-btn">닫기</span>
+                  </div>
+                ) : (
+                  <div
+                    className="review-view-open-btn-wrap"
+                    onClick={() => {
+                      setReviewViewOpen(!reviewViewOpen);
+                    }}
+                  >
+                    <span className="review-view-open-btn">펼치기</span>
+                  </div>
+                )}
+              </>
             ) : (
               <div className="review-none-wrap">
                 <span>비어있습니다. 작성해주세요!</span>

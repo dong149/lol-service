@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { api } from "../../api/summoner";
 
 const Match = async (accountId, summonerName, matchList) => {
-  // let matchList;
   let matchInfo;
   let sum = 0;
   let gameCnt = 0;
@@ -14,76 +13,40 @@ const Match = async (accountId, summonerName, matchList) => {
 
   let gameList = [];
   let rankCnt = 0;
-
-  console.log("for문 시작", new Date());
-
-  // Promise.all(promises).then(games => {
-  //   console.log(games)
-  // })
-  // //or
-  // const games = await Promise.all(promises)
-  // console.log(games)
-
   const promises = [];
 
   for (let cnt = 0; cnt < 20; cnt++) {
     promises.push(api.getMatchInfo(res.matches[cnt].gameId));
   }
   await Promise.all(promises).then((games) => {
-    // let cnt = 0;
-
     for (let cnt = 0; cnt < 20; cnt++) {
       let temp = games[cnt];
-      if (temp.gameMode === "CLASSIC" && temp.gameDuration >= 800) {
+      if (
+        temp.gameMode === "CLASSIC" &&
+        temp.gameDuration >= 800 &&
+        temp.participantIdentities[5].player.accountId !== "0"
+      ) {
         temp["cnt"] = cnt;
         gameList.push(temp);
         console.log(temp);
         rankCnt++;
       }
     }
-    // games.map((temp) => {
-    //   if (temp.gameMode === "CLASSIC" && temp.gameDuration >= 800) {
-    //     temp["cnt"] = cnt;
-    //     gameList.push(temp);
-    //     console.log(temp);
-    //     rankCnt++;
-    //   }
-    //   cnt++;
-    // });
   });
-  // let temp = await api.getMatchInfo(res.matches[cnt].gameId);
-  // if (temp.gameMode === "CLASSIC" && temp.gameDuration >= 800) {
-  //   console.log("gameList:", temp);
-  //   temp["cnt"] = cnt;
-  //   gameList.push(temp);
-  //   rankCnt++;
-  // }
-  // }
+
   console.log("for문 끝", new Date());
-  // console.log("gameList:", gameList);
-  // console.log("rankCnt:", rankCnt);
 
   const getMatchList = async () => {
-    console.log("getMatchList함수 시작", new Date());
     try {
-      // matchList = await api.getMatchList(accountId).then(async (res) => {
-      // console.log(res);
-      // for (let cnt = 0; cnt < 20; cnt++) {
-      // matchInfo = await api.getMatchInfo(res.matches[cnt].gameId);
       for (let i = 0; i < rankCnt; i++) {
         console.log(gameList[i]);
         let matchInfo = gameList[i];
         let cnt = matchInfo.cnt;
         let lane = res.matches[cnt].lane;
-        // console.log(res.matches[cnt]);
-        // console.log(matchInfo);
-        // console.log("라인 : ", lane);
-        gameCnt++;
-        // temp = deathNote Rank 와 win 의 정보가 담겨있다.
-        let rank = await deathNote(matchInfo, accountId);
 
-        // let win = temp.win;
-        // let rank = temp.deathNoteRank;
+        gameCnt++;
+
+        let rank = await deathNote(matchInfo, accountId);
 
         if (rank.win) {
           sum = sum + rank.deathNoteRank;
@@ -112,7 +75,6 @@ const Match = async (accountId, summonerName, matchList) => {
           win: rank.win,
           championImg: championImg,
         });
-        // console.log("rankinfo:", rankInfo);
       }
       finalScore = (11 - (sum / rankCnt) * 1.0) * 10;
       finalScore = Math.round(finalScore);
@@ -139,15 +101,19 @@ const Match = async (accountId, summonerName, matchList) => {
     }
   };
   await getMatchList();
-  let ret = { finalScore: finalScore, rankInfo: rankInfo, isTroll: isTroll };
-  // console.log(ret);
-  console.log("getMatchList함수 끝", new Date());
+  let ret = {
+    finalScore: finalScore,
+    rankInfo: rankInfo,
+    isTroll: isTroll,
+    rankCnt: rankCnt,
+  };
+
+  console.log("ret:", ret);
   if (ret) return ret;
 };
 
 // deathNote Rank 를 리턴하는 함수입니다.
 const deathNote = async (matchInfo, accountId) => {
-  console.log("데스노트함수 시작", new Date());
   let participantId = 0;
   for (let i = 0; i < 10; i++) {
     if (matchInfo.participantIdentities[i].player.accountId === accountId) {
@@ -310,7 +276,7 @@ const deathNote = async (matchInfo, accountId) => {
     deaths: deaths,
     assists: assists,
   };
-  console.log("데스노트함수 끝", new Date());
+
   return ret;
 };
 

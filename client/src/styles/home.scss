@@ -539,6 +539,27 @@ body {
         }
       }
     }
+    .review-view-close-btn-wrap {
+      margin-right: 60px;
+      height: 90px;
+      line-height: 90px;
+      margin-top: 20px;
+
+      text-align: center;
+      background-color: rgba(0, 0, 0, 0.8);
+      box-shadow: 0 -5px 300px -5px rgba(0, 0, 0, 0.8);
+      font-size: 40px;
+      font-weight: lighter;
+      color: white;
+      cursor: pointer;
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.9);
+        font-weight: normal;
+        color: white;
+      }
+      .review-view-close-btn {
+      }
+    }
     .review-view-open-btn-wrap {
       margin-right: 60px;
       height: 90px;
