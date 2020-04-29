@@ -286,6 +286,16 @@ body {
           font-weight: bold;
         }
       }
+      .summoner-deathnote-rank-mvp-wrap {
+        float: right;
+        padding-top: 30px;
+        padding-right: 30px;
+        width: 60px;
+        .summoner-deathnote-rank-mvp {
+          width: 100%;
+          filter: drop-shadow(0px 40px 30px rgba(250, 240, 66, 0.7));
+        }
+      }
     }
     .summoner-match-defeat-wrap {
       margin-bottom: 30px;

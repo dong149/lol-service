@@ -439,12 +439,22 @@ const App = () => {
                         {obj.kills}/{obj.deaths}/{obj.assists}
                       </span>
                     </div>
-                    <div className="summoner-deathnote-rank-wrap">
-                      <span className="summoner-deathnote-rank">
-                        {obj.deathNoteRank}
-                      </span>
-                      <span>등</span>
-                    </div>
+                    {obj.deathNoteRank === 1 ? (
+                      <div className="summoner-deathnote-rank-mvp-wrap">
+                        <img
+                          className="summoner-deathnote-rank-mvp"
+                          src="./trophy.png"
+                          alt="trophy"
+                        />
+                      </div>
+                    ) : (
+                      <div className="summoner-deathnote-rank-wrap">
+                        <span className="summoner-deathnote-rank">
+                          {obj.deathNoteRank}
+                        </span>
+                        <span>등</span>
+                      </div>
+                    )}
                   </div>
                 ) : (
                   <div className="summoner-match-defeat-wrap" key={key}>
@@ -485,12 +495,22 @@ const App = () => {
                         {obj.kills}/{obj.deaths}/{obj.assists}
                       </span>
                     </div>
-                    <div className="summoner-deathnote-rank-wrap">
-                      <span className="summoner-deathnote-rank">
-                        {obj.deathNoteRank}
-                      </span>
-                      <span>등</span>
-                    </div>
+                    {obj.deathNoteRank === 1 ? (
+                      <div className="summoner-deathnote-rank-mvp-wrap">
+                        <img
+                          className="summoner-deathnote-rank-mvp"
+                          src="./trophy.png"
+                          alt="trophy"
+                        />
+                      </div>
+                    ) : (
+                      <div className="summoner-deathnote-rank-wrap">
+                        <span className="summoner-deathnote-rank">
+                          {obj.deathNoteRank}
+                        </span>
+                        <span>등</span>
+                      </div>
+                    )}
                   </div>
                 );
               })}
