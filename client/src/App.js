@@ -11,7 +11,8 @@ import { ko } from "date-fns/locale";
 import { SemipolarLoading } from "react-loadingg";
 import "./styles/home.scss";
 import Match from "./components/match";
-
+import { Doughnut } from "react-chartjs-2";
+import { Chart } from "react-chartjs-2";
 const isEmpty = function (value) {
   if (
     value == "" ||
@@ -61,6 +62,8 @@ const App = () => {
   const [review, setReview] = useState();
   const [reviewExist, setReviewExist] = useState(false);
   const [reviewChange, setReviewChange] = useState(false);
+  const [reviewGood, setReviewGood] = useState(0);
+  const [reviewBad, setReviewBad] = useState(0);
 
   const [summonerInfo, setSummonerInfo] = useState();
 
@@ -78,6 +81,16 @@ const App = () => {
       onSubmit();
     }
   };
+  const onReviewGoodKeyPress = (e) => {
+    if (e.key === "Enter") {
+      onReviewSubmit("good");
+    }
+  };
+  const onReviewBadKeyPress = (e) => {
+    if (e.key === "Enter") {
+      onReviewSubmit("bad");
+    }
+  };
   const onSubmit = async (name) => {
     setLoading(true);
     setSummonerMatchInfo();
@@ -86,33 +99,48 @@ const App = () => {
     try {
       if (name) {
         infoTemp = await api.getSummonerByName(name).catch((err) => {
-          alert("소환사 정보가 없습니다.");
+          alert(
+            "소환사 정보가 없거나, 요청이 많을 경우일 수 있습니다. 잠시 후에 검색해주세요."
+          );
 
           setLoading(false);
           window.location.reload();
           return;
         });
-        // console.log(name);
         setSummonerInfo(infoTemp);
         nameCheck = true;
       } else {
         infoTemp = await api.getSummonerByName(summoner).catch((err) => {
-          alert("소환사 정보가 없습니다.");
+          alert(
+            "소환사 정보가 없거나, 요청이 많을 경우일 수 있습니다. 잠시 후에 검색해주세요."
+          );
           setLoading(false);
           window.location.reload();
           return;
         });
         setSummonerInfo(infoTemp);
+        getReview(name);
       }
-
-      const rankTemp = await api.getLeagueByEncryptedId(infoTemp.id);
+      getReview(infoTemp.name);
+      let rankTemp = await api.getLeagueByEncryptedId(infoTemp.id);
       const championMasteryTemp = await api.getChampionMasteryByEncryptedSummonerId(
         infoTemp.id
       );
       const championInfo = await api.getChampionInfo();
       let tierTemp;
       if (!isEmpty(rankTemp)) {
-        tierTemp = `/ranked-emblems/Emblem_${rankTemp[0].tier}.png`;
+        if (rankTemp[0].queueType === "RANKED_FLEX_SR") {
+          if (!isEmpty(rankTemp[1])) {
+            rankTemp = rankTemp[1];
+          } else {
+            rankTemp = [];
+          }
+        } else {
+          rankTemp = rankTemp[0];
+        }
+      }
+      if (!isEmpty(rankTemp)) {
+        tierTemp = `/ranked-emblems/Emblem_${rankTemp.tier}.png`;
       } else {
         tierTemp = `/ranked-emblems/Emblem_UNRANK.png`;
       }
@@ -132,7 +160,7 @@ const App = () => {
       setSummonerTierSrc(tierTemp);
       setSummonerProfileIconSrc(profileIconTemp);
       if (!isEmpty(rankTemp))
-        setSummonerTier(rankTemp[0].tier + " " + rankTemp[0].rank);
+        setSummonerTier(rankTemp.tier + " " + rankTemp.rank);
       setSummonerChampionMastery(championMasteryTemp);
       setAllChampionInfo(championInfo);
       setSummonerChampionInfo(champion);
@@ -146,8 +174,14 @@ const App = () => {
         setSummonerHistory(history);
       }
       let matchList = await api.getMatchList(infoTemp.accountId);
-      let matchInfo = await Match(infoTemp.accountId, infoTemp.name, matchList);
 
+      let matchInfo = await Match(infoTemp.accountId, infoTemp.name, matchList);
+      if (matchInfo.error === true) {
+        alert(
+          "많은 요청으로 잠시 에러가 발생하였습니다. 잠시후에 검색 부탁드립니다."
+        );
+        window.location.reload();
+      }
       console.log("매치정보: ", matchInfo);
       console.log("rankinfo: ", rankTemp);
       setSummonerMatchInfo(matchInfo);
@@ -194,15 +228,23 @@ const App = () => {
 
   const getReview = async (name) => {
     // console.log(name);
-    let res = await reviewService.getSummonerReview(name);
-    if (!res) {
-      setReviewExist(false);
-    } else {
-      setReviewExist(true);
-    }
-    // if (reviewChange === true) console.log("changed");
-    setReview(res);
-    setReviewChange(false);
+    await reviewService.getSummonerReview(name).then((res) => {
+      let bad = 0;
+      let good = 0;
+      if (isEmpty(res)) {
+        setReviewExist(false);
+      } else {
+        setReviewExist(true);
+        res.map((review) => {
+          if (review.type === "bad") bad++;
+          else good++;
+        });
+      }
+      setReviewGood(good);
+      setReviewBad(bad);
+      setReview(res);
+      setReviewChange(false);
+    });
   };
   // 언제 게시되었는지를 알려주는 함수입니다.
   const handleDate = (date) => {
@@ -228,6 +270,25 @@ const App = () => {
     }
     let result = res + " 전";
     return result;
+  };
+
+  let ReviewChart = () => {
+    let data = {
+      datasets: [
+        {
+          data: [reviewBad, reviewGood],
+
+          backgroundColor: ["rgba(0,0,0, 1)", "rgba(0,0,0,0.1)"],
+          borderColor: ["#ffffff", "#ffffff"],
+          hoverBackgroundColor: ["#FF0100", "#56C1FF"],
+        },
+      ],
+      labels: ["리폿", "칭찬"],
+    };
+    let options = {
+      animation: false,
+    };
+    return <Doughnut data={data} options={options} />;
   };
 
   return (
@@ -294,28 +355,6 @@ const App = () => {
                 <span className="troll-text">{summonerMatchInfo.isTroll}</span>
               </div>
             )}
-            {/* <div className="summoner-percentage">
-              {summonerMatchInfo ? (
-                <div className="summoner-percentage-wrap">
-                  <span className="summoner-percentage-info-text">
-                    최근20경기
-                  </span>
-                  <span
-                    className="summoner-percentage"
-                    style={{ color: "red" }}
-                  >
-                    {summonerMatchInfo.finalScore}
-                  </span>
-                  <span className="summoner-percentage">점</span>
-                </div>
-              ) : (
-                <div className="summoner-percentage-loading-wrap">
-                  <span className="summoner-percentage-loading">
-                    점수 계산중
-                  </span>
-                </div>
-              )}
-            </div> */}
           </div>
           <hr
             style={{ color: "#d5d5d5", border: "thin solid" }}
@@ -339,8 +378,8 @@ const App = () => {
                     <span className="summoner-tier-info-percentage">
                       승률
                       {Math.round(
-                        (summonerRank[0].wins /
-                          (summonerRank[0].wins + summonerRank[0].losses)) *
+                        (summonerRank.wins /
+                          (summonerRank.wins + summonerRank.losses)) *
                           1.0 *
                           100
                       )}
@@ -349,7 +388,7 @@ const App = () => {
                   </div>
                   <div className="summoner-tier-info-percentage-wrap">
                     <span className="summoner-tier-info-percentage">
-                      {summonerRank[0].wins}승 {summonerRank[0].losses}패
+                      {summonerRank.wins}승 {summonerRank.losses}패
                     </span>
                   </div>
                 </>
@@ -395,6 +434,7 @@ const App = () => {
               </div>
             )}
           </div>
+
           {/* 최근 경기 분석 */}
           {summonerMatchInfo ? (
             <div className="summoner-match-info">
@@ -519,8 +559,10 @@ const App = () => {
             <></>
           )}
           {/* 소환사 리뷰 */}
+          <ReviewChart />
           <div className="summoner-review">
             <span className="summoner-review-text">REVIEW</span>
+
             <div className="summoner-review-type">
               <span className="summoner-review-type-text">MODE : </span>
               <div
@@ -544,6 +586,7 @@ const App = () => {
                     onChange={(e) => handleReviewInput(e.target.value)}
                     rows="4"
                     placeholder="소환사의 리뷰를 작성해주세요."
+                    onKeyPress={onReviewGoodKeyPress}
                   />
                 </div>
                 <div className="summoner-review-btn-wrap">
@@ -565,6 +608,7 @@ const App = () => {
                     rows="4"
                     value={reviewText}
                     placeholder="소환사의 리뷰를 작성해주세요."
+                    onKeyPress={onReviewBadKeyPress}
                   />
                 </div>
                 <div className="summoner-review-btn-wrap">

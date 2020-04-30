@@ -10,8 +10,7 @@ module.exports = (app) => {
   app.get("/api/review/name/:name", async (req, res) => {
     await Review.find({ name: req.params.name }, (err, reviews) => {
       if (err) return res.status(500).json({ error: err });
-      if (reviews.length === 0)
-        return res.status(404).json({ error: "reviews not found" });
+      if (reviews.length === 0) return res.send([]);
       return res.json(reviews);
     });
   });

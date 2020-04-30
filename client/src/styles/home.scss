@@ -221,10 +221,12 @@ body {
       }
     }
   }
+
   .summoner-match-info {
     text-align: left;
     padding-top: 80px;
     padding-left: 30px;
+    padding-bottom: 70px;
     width: 90%;
     .summoner-match-info-text {
       display: block;
@@ -358,7 +360,7 @@ body {
   .summoner-review {
     width: 100%;
     text-align: left;
-    padding-top: 80px;
+    padding-top: 30px;
     padding-left: 30px;
 
     .summoner-review-text {

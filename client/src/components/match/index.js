@@ -13,26 +13,32 @@ const Match = async (accountId, summonerName, matchList) => {
 
   let gameList = [];
   let rankCnt = 0;
+  let errorCheck = false;
   const promises = [];
 
   for (let cnt = 0; cnt < 20; cnt++) {
     promises.push(api.getMatchInfo(res.matches[cnt].gameId));
   }
-  await Promise.all(promises).then((games) => {
-    for (let cnt = 0; cnt < 20; cnt++) {
-      let temp = games[cnt];
-      if (
-        temp.gameMode === "CLASSIC" &&
-        temp.gameDuration >= 800 &&
-        temp.participantIdentities[5].player.accountId !== "0"
-      ) {
-        temp["cnt"] = cnt;
-        gameList.push(temp);
-        console.log(temp);
-        rankCnt++;
+  await Promise.all(promises)
+    .then((games) => {
+      for (let cnt = 0; cnt < 20; cnt++) {
+        let temp = games[cnt];
+        if (
+          temp.gameMode === "CLASSIC" &&
+          temp.gameDuration >= 800 &&
+          temp.participantIdentities[5].player.accountId !== "0"
+        ) {
+          temp["cnt"] = cnt;
+          gameList.push(temp);
+          console.log(temp);
+          rankCnt++;
+        }
       }
-    }
-  });
+    })
+    .catch((err) => {
+      console.log("에러발생이요!");
+      errorCheck = true;
+    });
 
   console.log("for문 끝", new Date());
 
@@ -106,6 +112,7 @@ const Match = async (accountId, summonerName, matchList) => {
     rankInfo: rankInfo,
     isTroll: isTroll,
     rankCnt: rankCnt,
+    error: errorCheck,
   };
 
   console.log("ret:", ret);
