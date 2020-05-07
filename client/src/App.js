@@ -122,6 +122,7 @@ const App = () => {
         getReview(name);
       }
       getReview(infoTemp.name);
+      console.log(infoTemp);
       let rankTemp = await api.getLeagueByEncryptedId(infoTemp.id);
       const championMasteryTemp = await api.getChampionMasteryByEncryptedSummonerId(
         infoTemp.id
@@ -293,7 +294,12 @@ const App = () => {
 
   return (
     <div>
-      <div className="logo-wrap">
+      <div
+        className="logo-wrap"
+        onClick={() => {
+          window.location.reload();
+        }}
+      >
         <img className="logo" src="./deathnote.png" alt="deathnote-logo" />
       </div>
       <div className="home-input-wrap">
@@ -398,17 +404,17 @@ const App = () => {
             {summonerMatchInfo ? (
               <div className="summoner-percentage">
                 <div className="summoner-percentage-wrap">
-                  <span className="summoner-percentage-info-text">
+                  <div className="summoner-percentage-info-text-wrap">
                     최근{summonerMatchInfo.rankCnt}경기
-                  </span>
+                  </div>
                   <div className="summoner-percentage-span-wrap">
-                    <span className="summoner-percentage">점</span>
                     <span
                       className="summoner-percentage"
                       style={{ color: "red" }}
                     >
                       {summonerMatchInfo.finalScore}
                     </span>
+                    <span className="summoner-percentage">점</span>
                   </div>
                 </div>
               </div>

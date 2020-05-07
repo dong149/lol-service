@@ -1,9 +1,9 @@
 @import "./font.scss";
+@import "./mixin.scss";
 body {
   background-color: black;
   font-family: $spoqa-han-sans;
 }
-
 .logo-wrap {
   width: 20%;
   margin: 0 auto;
@@ -77,12 +77,13 @@ body {
   margin-top: 30px;
   padding-bottom: 50px;
   .summoner-profile {
+    display: table;
     width: 100%;
     padding-left: 2%;
     padding-top: 2%;
 
     .summoner-profile-icon-wrap {
-      display: inline-block;
+      display: table-cell;
       width: 15%;
       height: auto;
       // margin-top: 5%;
@@ -94,11 +95,11 @@ body {
       }
     }
     .summoner-info-wrap {
-      display: inline-block;
+      display: table-cell;
       width: 35%;
-      margin-left: 2%;
-      padding-top: 25px;
-      vertical-align: top;
+      padding-left: 2%;
+      // padding-top: 25px;
+      vertical-align: middle;
       .summoner-name-wrap {
         display: block;
         width: 100%;
@@ -118,12 +119,12 @@ body {
       }
     }
     .troll-text-wrap {
-      width: 40%;
-      display: inline-block;
-      font-size: 40px;
+      width: 45%;
+      display: table-cell;
+      font-size: 3vw;
       font-weight: lighter;
-      vertical-align: top;
-      padding-top: 28px;
+      vertical-align: middle;
+      // padding-top: 28px;
 
       .troll-text {
       }
@@ -134,16 +135,25 @@ body {
   }
   .summoner-tier {
     width: 95%;
+    height: 200px;
     margin: 0 auto;
-    margin-top: 5%;
+    display: table;
+    padding: 10px 0;
+    // margin-top: 5%;
     box-shadow: 0 30px 60px 12px rgba(0, 0, 33, 0.05),
       0 4px 24px 0 rgba(0, 0, 33, 0.05), 0 0 1px 0 rgba(0, 0, 33, 0.09);
 
     .summoner-tier-img-wrap {
-      margin-left: 10px;
-      margin-top: 5px;
-      display: inline-block;
+      padding-left: 10px;
+      padding-top: 10px;
+      padding-bottom: 10px;
+      // margin-top: 5px;
+      // margin-bottom: 5px;
+      display: table-cell;
+
+      vertical-align: middle;
       width: 20%;
+      height: 150px;
       background-color: transparent;
 
       .summoner-tier-img {
@@ -153,9 +163,13 @@ body {
       }
     }
     .summoner-tier-info {
-      display: inline-block;
-      vertical-align: top;
-      padding-top: 50px;
+      display: table-cell;
+      width: 20%;
+      vertical-align: middle;
+      // vertical-align: top;
+      // padding-top: 50px;
+      padding-top: 10px;
+      padding-bottom: 10px;
       padding-left: 2%;
 
       .summoner-tier-info-tier-wrap {
@@ -176,29 +190,40 @@ body {
     }
     // 소환사 폼 점수
     .summoner-percentage {
-      float: right;
-      width: max-content;
+      // float: right;
+      display: table-cell;
+      // width: max-content;
+      width: 50%;
       text-align: right;
+      vertical-align: middle;
       .summoner-percentage-wrap {
-        padding-right: 80px;
-        padding-top: 30px;
+        // padding-right: 80px;
+        // padding-top: 30px;
         line-height: 60px;
-        .summoner-percentage-info-text {
+        padding-right: 10%;
+        .summoner-percentage-info-text-wrap {
           display: block;
           font-size: 35px;
           font-weight: lighter;
+          // text-align: right;
+        }
+        .summoner-percentage-span-wrap {
+          display: block;
+
+          // text-align: right;
+          .summoner-percentage {
+            display: inline-block;
+            width: max-content;
+            font-size: 80px;
+            font-weight: bold;
+            // text-align: right;
+          }
         }
         .summoner-percentage-defeat-text {
           display: block;
           font-size: 20px;
           margin-left: 15px;
           margin-right: 10px;
-        }
-        .summoner-percentage-span-wrap {
-          .summoner-percentage {
-            font-size: 80px;
-            font-weight: bold;
-          }
         }
       }
     }
@@ -235,6 +260,7 @@ body {
       padding-bottom: 20px;
     }
     .summoner-match-win-wrap {
+      display: table;
       margin-bottom: 30px;
       width: 100%;
       box-shadow: 0 30px 60px 12px rgba(0, 0, 33, 0.05),
@@ -242,115 +268,140 @@ body {
       background-color: #56c1ff;
       text-align: left;
       .summoner-match-champion-img-wrap {
-        display: inline-block;
+        display: table-cell;
         width: 17%;
-        padding-top: 3px;
+        vertical-align: middle;
+        // padding-top: 3px;
         .summoner-match-champion-img {
+          width: 100%;
           filter: drop-shadow(0px 30px 30px rgba(0, 0, 33, 0.3));
         }
       }
       .summoner-match-rank-wrap-wrap {
-        display: inline-block;
-        width: 20%;
-        vertical-align: top;
-        padding-top: 9px;
+        display: table-cell;
+        width: 22%;
+        vertical-align: middle;
+        padding-left: 2%;
+        text-align: left;
+        // padding-top: 9px;
 
         .summoner-match-rank-wrap {
-          padding-top: 10px;
+          padding-top: 0.5rem;
+          padding-bottom: 0.5rem;
           width: 100%;
           display: block;
           .summoner-match-rank {
-            font-size: 25px;
+            font-size: 1.3vw;
             font-weight: lighter;
           }
         }
       }
       .summoner-match-kda-wrap {
         width: 20%;
-        display: inline-block;
-        vertical-align: top;
+        display: table-cell;
+        vertical-align: middle;
         text-align: center;
-        padding-top: 35px;
-        padding-left: 40px;
+        // padding-top: 35px;
+        // padding-left: 40px;
         .summoner-match-kda {
-          font-size: 35px;
+          font-size: 2vw;
           font-weight: lighter;
         }
       }
       .summoner-deathnote-rank-wrap {
-        float: right;
-        padding-top: 30px;
-        padding-right: 40px;
-        text-align: right;
-        vertical-align: top;
+        width: 20%;
+        display: table-cell;
+        // padding-top: 30px;
+        // padding-right: 40px;
+        text-align: center;
+        vertical-align: middle;
         .summoner-deathnote-rank {
-          font-size: 50px;
+          font-size: 3vw;
           font-weight: bold;
         }
       }
       .summoner-deathnote-rank-mvp-wrap {
-        float: right;
-        padding-top: 30px;
-        padding-right: 30px;
-        width: 60px;
+        display: table-cell;
+        text-align: center;
+        vertical-align: middle;
+        width: 20%;
+        // width: 4vw ;
         .summoner-deathnote-rank-mvp {
-          width: 100%;
+          width: 40%;
           filter: drop-shadow(0px 40px 30px rgba(250, 240, 66, 0.7));
         }
       }
     }
     .summoner-match-defeat-wrap {
+      display: table;
       margin-bottom: 30px;
       width: 100%;
-      background-color: #ff968d;
       box-shadow: 0 30px 60px 12px rgba(0, 0, 33, 0.05),
         0 4px 24px 0 rgba(0, 0, 33, 0.05), 0 0 1px 0 rgba(0, 0, 33, 0.09);
+      background-color: #ff968d;
       text-align: left;
       .summoner-match-champion-img-wrap {
-        display: inline-block;
+        display: table-cell;
         width: 17%;
-        padding-top: 3px;
+        vertical-align: middle;
+        // padding-top: 3px;
         .summoner-match-champion-img {
+          width: 100%;
           filter: drop-shadow(0px 30px 30px rgba(0, 0, 33, 0.3));
         }
       }
       .summoner-match-rank-wrap-wrap {
-        display: inline-block;
-        width: 20%;
-        vertical-align: top;
-        padding-top: 9px;
+        display: table-cell;
+        width: 22%;
+        vertical-align: middle;
+        padding-left: 2%;
+        text-align: left;
+        // padding-top: 9px;
 
         .summoner-match-rank-wrap {
-          padding-top: 10px;
+          padding-top: 0.5rem;
+          padding-bottom: 0.5rem;
           width: 100%;
           display: block;
           .summoner-match-rank {
-            font-size: 25px;
+            font-size: 1.3vw;
             font-weight: lighter;
           }
         }
       }
       .summoner-match-kda-wrap {
         width: 20%;
-        display: inline-block;
-        vertical-align: top;
+        display: table-cell;
+        vertical-align: middle;
         text-align: center;
-        padding-top: 35px;
-        padding-left: 40px;
+        // padding-top: 35px;
+        // padding-left: 40px;
         .summoner-match-kda {
-          font-size: 35px;
+          font-size: 2vw;
           font-weight: lighter;
         }
       }
       .summoner-deathnote-rank-wrap {
-        float: right;
-        padding-top: 30px;
-        padding-right: 40px;
-        text-align: right;
-        vertical-align: top;
+        width: 20%;
+        display: table-cell;
+        // padding-top: 30px;
+        // padding-right: 40px;
+        text-align: center;
+        vertical-align: middle;
         .summoner-deathnote-rank {
-          font-size: 50px;
+          font-size: 3vw;
           font-weight: bold;
+        }
+      }
+      .summoner-deathnote-rank-mvp-wrap {
+        display: table-cell;
+        text-align: center;
+        vertical-align: middle;
+        width: 8%;
+        // width: 4vw ;
+        .summoner-deathnote-rank-mvp {
+          width: 40%;
+          filter: drop-shadow(0px 40px 30px rgba(250, 240, 66, 0.7));
         }
       }
     }
@@ -495,6 +546,7 @@ body {
         .review-view-content-bad-wrap {
           display: block;
           width: max-content;
+          max-width: 90%;
           background-color: black;
           box-shadow: 0 30px 60px 12px rgba(0, 0, 33, 0.05),
             0 4px 24px 0 rgba(0, 0, 33, 0.05), 0 0 1px 0 rgba(0, 0, 33, 0.09);
@@ -536,6 +588,7 @@ body {
         .review-view-content-good-wrap {
           display: block;
           float: right;
+          max-width: 90%;
           width: max-content;
           box-shadow: 0 30px 60px 12px rgba(0, 0, 33, 0.05),
             0 4px 24px 0 rgba(0, 0, 33, 0.05), 0 0 1px 0 rgba(0, 0, 33, 0.09);
@@ -659,6 +712,242 @@ body {
       color: white;
     }
     .champion-open-btn {
+    }
+  }
+}
+@include mobile {
+  html {
+    font-size: 10px;
+  }
+  .logo-wrap {
+    width: 60%;
+    margin: 0 auto;
+    margin-top: 20%;
+    .logo {
+      width: 100%;
+      cursor: pointer;
+    }
+  }
+  .home-input-wrap {
+    margin-top: 5%;
+    width: 90%;
+  }
+
+  .home-input-recent {
+    width: 90%;
+    .home-input-recent-text-wrap {
+      width: 33%;
+      .home-input-recent-text {
+        font-size: 1.2rem;
+      }
+    }
+  }
+  .summoner-info {
+    width: 90%;
+    .summoner-profile {
+      width: 100%;
+      .summoner-profile-icon-wrap {
+        width: 10%;
+        .summoner-profile-icon {
+          // padding-top: 1rem;
+          // padding-left: 1rem;
+        }
+      }
+      .summoner-info-wrap {
+        width: 30%;
+        // width: 20%;
+        // padding-top: 1rem;
+        // padding-left: 1rem;
+        .summoner-name-wrap {
+          .summoner-name {
+            font-size: 4vw;
+          }
+        }
+        .summoner-level-wrap {
+          .summoner-level {
+            font-size: 1vw;
+          }
+        }
+      }
+
+      .troll-text-wrap {
+        // display: block;
+        width: 30%;
+        text-align: center;
+        font-size: 4vw;
+        // padding-top: 1.4rem;
+        .troll-text {
+        }
+      }
+    }
+    .summoner-tier {
+      height: auto;
+      .summoner-tier-img-wrap {
+        height: 1vh;
+        .summoner-tier-img {
+        }
+      }
+      .summoner-tier-info {
+        width: 20%;
+
+        padding-top: 0rem;
+        // margin-top: 3rem;
+        // margin-bottom: 3rem;
+
+        .summoner-tier-info-tier-wrap {
+          .summoner-tier-info-tier {
+            font-size: 3vw;
+          }
+        }
+        .summoner-tier-info-percentage-wrap {
+          .summoner-tier-info-percentage {
+            font-size: 3vw;
+          }
+        }
+      }
+
+      .summoner-percentage {
+        .summoner-percentage-wrap {
+          line-height: 5vw;
+          .summoner-percentage-info-text-wrap {
+            font-size: 5vw;
+          }
+          .summoner-percentage-span-wrap {
+            .summoner-percentage {
+              font-size: 7vw;
+            }
+          }
+          .summoner-percentage-defeat-text {
+          }
+        }
+      }
+    }
+
+    .summoner-match-info {
+      padding-top: 1rem;
+      padding-left: 4vw;
+      padding-right: 0;
+      .summoner-match-info-text {
+        font-size: 6vw;
+      }
+      .summoner-match-win-wrap {
+        margin-bottom: 1vh;
+        .summoner-match-rank-wrap-wrap {
+        }
+        .summoner-match-kda-wrap {
+        }
+        .summoner-deathnote-rank-wrap {
+        }
+      }
+      .summoner-match-defeat-wrap {
+        margin-bottom: 1vh;
+        .summoner-match-rank-wrap-wrap {
+        }
+        .summoner-match-kda-wrap {
+        }
+        .summoner-deathnote-rank-wrap {
+        }
+      }
+    }
+    .summoner-review {
+      padding-top: 1rem;
+      padding-left: 2vw;
+      padding-right: 0;
+      .summoner-review-text {
+        font-size: 6vw;
+      }
+      .summoner-review-type {
+        // width: 30vw;
+        margin-right: 10vw;
+        padding-top: 3vh;
+        .summoner-review-type-text {
+          font-size: 4vw;
+          padding-right: 1vw;
+        }
+        .summoner-review-type-bad-wrap {
+          width: 12vw;
+          height: 5vh;
+          // line-height: 5vw;
+          font-size: 5vw;
+          &:hover {
+            font-size: 5vw;
+          }
+        }
+        .summoner-review-type-good-wrap {
+          width: 12vw;
+          height: 5vh;
+          // line-height: 5vw;
+          font-size: 5vw;
+          &:hover {
+            font-size: 5vw;
+          }
+        }
+      }
+      .summoner-review-good-input-wrap {
+        margin-top: 3vh;
+        .summoner-review-good-input {
+          font-size: 4vw;
+        }
+      }
+      .summoner-review-bad-input-wrap {
+        margin-top: 3vh;
+        .summoner-review-bad-input {
+          font-size: 4vw;
+        }
+      }
+      .summoner-review-btn-wrap {
+        .summoner-review-submit-btn {
+          font-size: 5vw;
+        }
+        .summoner-review-close-btn {
+          font-size: 5vw;
+        }
+      }
+      .review-view {
+        .review-view-bad {
+          .review-view-date-bad-wrap {
+            margin-left: 0;
+
+            .review-view-date-bad {
+              font-size: 4vw;
+            }
+          }
+          .review-view-content-bad-wrap {
+            padding: 3vw 3vw;
+            border-radius: 4vw;
+            margin-left: 0;
+            .review-view-content-bad {
+              font-size: 4vw;
+            }
+          }
+        }
+        .review-view-good {
+          padding-left: 6vw;
+          .review-view-date-good-wrap {
+            border-radius: 4vw;
+            .review-view-date-good {
+              font-size: 4vw;
+            }
+          }
+          .review-view-content-good-wrap {
+            padding: 3vw 3vw;
+            margin-right: 3vw;
+            .review-view-content-good {
+              font-size: 4vw;
+            }
+          }
+        }
+      }
+      .review-view-close-btn-wrap {
+        font-size: 7vw;
+        margin-right: 4vw;
+      }
+      .review-view-open-btn-wrap {
+        background-color: rgba(0, 0, 0, 0.9);
+        box-shadow: 0 -5px 300px -5px rgba(0, 0, 0, 0.95);
+        font-size: 7vw;
+        margin-right: 4vw;
+      }
     }
   }
 }
