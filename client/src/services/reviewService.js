@@ -1,5 +1,4 @@
 import axios from "axios";
-
 export default {
   //   getReviewAll: async () => {
   //     let res = await axios.get(`/api/review`);
