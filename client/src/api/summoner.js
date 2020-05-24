@@ -12,20 +12,30 @@ import dotenv from "dotenv";
 //   baseURL: BASE_URL,
 // });
 
+let BASE_URL;
+if (process.env.NODE_ENV === "production") {
+  BASE_URL = "https://donghoon.tk";
+} else {
+  BASE_URL = "http://localhost:3000";
+}
+const baseAPI = axios.create({
+  baseURL: BASE_URL,
+});
+
 export const api = {
   getSummonerByName: async (summonerName) => {
-    const res = await axios.get(`/api/summoner-by-name?name=${summonerName}`);
+    const res = await baseAPI.get(`/api/summoner-by-name?name=${summonerName}`);
     return res.data;
   },
 
   getLeagueByEncryptedId: async (encryptedId) => {
-    const result = await axios.get(
+    const result = await baseAPI.get(
       `/api/league-by-encrypted-id?id=${encryptedId}`
     );
     return result.data;
   },
   getChampionMasteryByEncryptedSummonerId: async (encryptedSummonerId) => {
-    const result = await axios.get(
+    const result = await baseAPI.get(
       `/api/champion-mastery-by-encrypted-summoner-id?id=${encryptedSummonerId}`
     );
     return result.data;
@@ -37,11 +47,11 @@ export const api = {
     return result.data.data;
   },
   getMatchList: async (encryptedId) => {
-    const result = await axios.get(`/api/matchlist?id=${encryptedId}`);
+    const result = await baseAPI.get(`/api/matchlist?id=${encryptedId}`);
     return result.data;
   },
   getMatchInfo: async (matchId) => {
-    const result = await axios.get(`/api/matchInfo?id=${matchId}`);
+    const result = await baseAPI.get(`/api/matchInfo?id=${matchId}`);
     return result.data;
   },
 };
