@@ -210,8 +210,6 @@ const App = () => {
         type: type,
         content: reviewText || "",
       };
-      // console.log(review);
-      // console.log(reviewText);
       reviewService.postReview(review);
       setReviewChange(true);
       setReviewText("");
